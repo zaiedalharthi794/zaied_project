@@ -8,7 +8,7 @@ import GamePage from './pages/GamePage';
 import AdminLogin from './components/AdminLogin';
 import { initialData, translations } from './data/initialData';
 import { PortfolioData, Language, Translation } from './types';
-import { GraduationCapIcon, LoginIcon, LogoutIcon } from './components/Icons';
+import { GraduationCapIcon, LoginIcon, LogoutIcon, MenuIcon, XIcon } from './components/Icons';
 
 const App: React.FC = () => {
     const [isAdmin, setIsAdmin] = useState<boolean>(false);
@@ -22,6 +22,7 @@ const App: React.FC = () => {
             return initialData;
         }
     });
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     const t = translations[language];
 
@@ -62,6 +63,8 @@ const App: React.FC = () => {
     const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setLanguage(e.target.value as Language);
     };
+
+    const closeMobileMenu = () => setIsMobileMenuOpen(false);
     
     const activeLinkClass = "bg-red-800 text-white";
     const inactiveLinkClass = "text-gray-300 hover:bg-red-900 hover:text-white";
@@ -86,7 +89,49 @@ const App: React.FC = () => {
                                     </div>
                                 </div>
                             </div>
-                            <div className="flex items-center space-x-4 rtl:space-x-reverse">
+                            <div className="flex items-center">
+                                <div className="hidden md:flex items-center space-x-4 rtl:space-x-reverse">
+                                    <select onChange={handleLanguageChange} value={language} className="bg-gray-700 text-white px-2 py-1 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-red-600">
+                                        <option value="ar">العربية</option>
+                                        <option value="en">English</option>
+                                        <option value="fr">Français</option>
+                                        <option value="es">Español</option>
+                                    </select>
+                                    {isAdmin ? (
+                                        <button onClick={handleLogout} className="p-2 rounded-full text-gray-300 hover:bg-red-900 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white transition-colors" aria-label="Logout">
+                                            <LogoutIcon className="h-6 w-6" />
+                                        </button>
+                                    ) : (
+                                        <button onClick={() => setShowLogin(true)} className="p-2 rounded-full text-gray-300 hover:bg-red-900 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white transition-colors" aria-label="Admin Login">
+                                            <LoginIcon className="h-6 w-6" />
+                                        </button>
+                                    )}
+                                </div>
+                                <div className="flex md:hidden">
+                                     <button
+                                        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                                        type="button"
+                                        className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+                                        aria-controls="mobile-menu"
+                                        aria-expanded={isMobileMenuOpen}
+                                    >
+                                        <span className="sr-only">Open main menu</span>
+                                        {isMobileMenuOpen ? <XIcon className="block h-6 w-6" /> : <MenuIcon className="block h-6 w-6" />}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </nav>
+
+                    <div className={`transition-all duration-300 ease-in-out overflow-hidden md:hidden bg-gray-800/95 ${isMobileMenuOpen ? 'max-h-96' : 'max-h-0'}`} id="mobile-menu">
+                        <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                            <NavLink to="/" onClick={closeMobileMenu} className={({ isActive }) => `${isActive ? activeLinkClass : inactiveLinkClass} block px-3 py-2 rounded-md text-base font-medium transition-colors`}>{t.nav.home}</NavLink>
+                            <NavLink to="/journey" onClick={closeMobileMenu} className={({ isActive }) => `${isActive ? activeLinkClass : inactiveLinkClass} block px-3 py-2 rounded-md text-base font-medium transition-colors`}>{t.nav.journey}</NavLink>
+                            <NavLink to="/evaluation" onClick={closeMobileMenu} className={({ isActive }) => `${isActive ? activeLinkClass : inactiveLinkClass} block px-3 py-2 rounded-md text-base font-medium transition-colors`}>{t.nav.evaluation}</NavLink>
+                            <NavLink to="/game" onClick={closeMobileMenu} className={({ isActive }) => `${isActive ? activeLinkClass : inactiveLinkClass} block px-3 py-2 rounded-md text-base font-medium transition-colors`}>{t.nav.game}</NavLink>
+                        </div>
+                        <div className="pt-4 pb-3 border-t border-gray-700">
+                           <div className="flex items-center justify-center px-5 gap-x-4">
                                 <select onChange={handleLanguageChange} value={language} className="bg-gray-700 text-white px-2 py-1 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-red-600">
                                     <option value="ar">العربية</option>
                                     <option value="en">English</option>
@@ -94,17 +139,17 @@ const App: React.FC = () => {
                                     <option value="es">Español</option>
                                 </select>
                                 {isAdmin ? (
-                                    <button onClick={handleLogout} className="p-2 rounded-full text-gray-300 hover:bg-red-900 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white transition-colors" aria-label="Logout">
+                                    <button onClick={() => { handleLogout(); closeMobileMenu(); }} className="p-2 rounded-full text-gray-300 hover:bg-red-900 hover:text-white" aria-label="Logout">
                                         <LogoutIcon className="h-6 w-6" />
                                     </button>
                                 ) : (
-                                    <button onClick={() => setShowLogin(true)} className="p-2 rounded-full text-gray-300 hover:bg-red-900 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white transition-colors" aria-label="Admin Login">
+                                    <button onClick={() => { setShowLogin(true); closeMobileMenu(); }} className="p-2 rounded-full text-gray-300 hover:bg-red-900 hover:text-white" aria-label="Admin Login">
                                         <LoginIcon className="h-6 w-6" />
                                     </button>
                                 )}
-                            </div>
+                           </div>
                         </div>
-                    </nav>
+                    </div>
                 </header>
                 <main>
                     <Routes>
