@@ -72,9 +72,11 @@ const HomePage: React.FC<HomePageProps> = ({ data, setData, isAdmin, t }) => {
                    )}
                 </div>
                  {isAdmin && <input type="file" ref={fileInputRef} onChange={handleAvatarChange} accept="image/*" className="hidden" />}
-                <h1 className="text-4xl md:text-6xl font-extrabold text-zinc-900 dark:text-white mt-4">{t.home.welcome}</h1>
-                <p className="text-xl text-zinc-600 dark:text-neutral-300 mt-2">{t.home.student}: {data.studentInfo.name}</p>
-                 <div className="mt-4 text-zinc-500 dark:text-neutral-400 flex justify-center items-center gap-4 flex-wrap">
+                <p className="text-xl text-zinc-600 dark:text-neutral-300 mt-6">{t.home.welcome}</p>
+                <h1 className="text-4xl md:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-amber-500 dark:from-orange-400 dark:to-amber-400 py-2">
+                    {data.studentInfo.name}
+                </h1>
+                 <div className="mt-2 text-zinc-500 dark:text-neutral-400 flex justify-center items-center gap-4 flex-wrap">
                     <span>{data.studentInfo.grade} - {data.studentInfo.school}</span>
                     <span className="text-neutral-300 dark:text-zinc-600 hidden sm:inline">•</span>
                     <a href={`mailto:${data.studentInfo.email}`} className="hover:text-orange-500 dark:hover:text-orange-400 transition-colors">{data.studentInfo.email}</a>

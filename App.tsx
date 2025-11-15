@@ -132,19 +132,31 @@ const App: React.FC = () => {
     });
     
     useEffect(() => {
-        const applyTheme = () => {
-            const isDark = theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
-            document.documentElement.classList.toggle('dark', isDark);
-        };
-
-        applyTheme();
+        const root = document.documentElement;
+        const isSystemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        
+        if (theme === 'dark') {
+            root.classList.add('dark');
+        } else if (theme === 'light') {
+            root.classList.remove('dark');
+        } else { // 'system'
+            if (isSystemDark) {
+                root.classList.add('dark');
+            } else {
+                root.classList.remove('dark');
+            }
+        }
+        
         localStorage.setItem('theme', theme);
 
         const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-        
         const handleSystemChange = () => {
             if (theme === 'system') {
-                applyTheme();
+                if (mediaQuery.matches) {
+                    root.classList.add('dark');
+                } else {
+                    root.classList.remove('dark');
+                }
             }
         };
 
@@ -154,6 +166,7 @@ const App: React.FC = () => {
             mediaQuery.removeEventListener('change', handleSystemChange);
         };
     }, [theme]);
+
 
     const handleThemeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setTheme(e.target.value as 'light' | 'dark' | 'system');
