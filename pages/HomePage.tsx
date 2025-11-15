@@ -57,9 +57,9 @@ const HomePage: React.FC<HomePageProps> = ({ data, setData, isAdmin, t }) => {
 
     return (
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
-            <header className="text-center mb-16 py-10 bg-white dark:bg-zinc-800/50 rounded-2xl shadow-sm">
-                <div className={`relative inline-block p-1 bg-gradient-to-r from-orange-400 to-orange-600 rounded-full ${isAdmin ? 'cursor-pointer' : ''}`} onClick={handleAvatarClick}>
-                  <img src={data.studentInfo.avatarUrl} alt="Graduate Avatar" className="h-40 w-40 rounded-full object-cover border-4 border-white dark:border-zinc-800" />
+            <header className="text-center mb-16 py-10 bg-card/50 rounded-2xl shadow-sm">
+                <div className={`relative inline-block p-1 bg-gradient-to-r from-primary/80 to-primary rounded-full ${isAdmin ? 'cursor-pointer' : ''}`} onClick={handleAvatarClick}>
+                  <img src={data.studentInfo.avatarUrl} alt="Graduate Avatar" className="h-40 w-40 rounded-full object-cover border-4 border-background" />
                    {isAdmin && (
                      <div className="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-50 flex items-center justify-center rounded-full transition-opacity">
                          <EditIcon className="w-8 h-8 text-white opacity-0 hover:opacity-100" />
@@ -72,14 +72,14 @@ const HomePage: React.FC<HomePageProps> = ({ data, setData, isAdmin, t }) => {
                    )}
                 </div>
                  {isAdmin && <input type="file" ref={fileInputRef} onChange={handleAvatarChange} accept="image/*" className="hidden" />}
-                <p className="text-xl text-zinc-600 dark:text-neutral-300 mt-6">{t.home.welcome}</p>
-                <h1 className="text-4xl md:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-amber-500 dark:from-orange-400 dark:to-amber-400 py-2">
+                <p className="text-xl text-muted-foreground mt-6">{t.home.welcome}</p>
+                <h1 className="text-4xl md:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-primary to-amber-500 py-2">
                     {data.studentInfo.name}
                 </h1>
-                 <div className="mt-2 text-zinc-500 dark:text-neutral-400 flex justify-center items-center gap-4 flex-wrap">
+                 <div className="mt-2 text-muted-foreground flex justify-center items-center gap-4 flex-wrap">
                     <span>{data.studentInfo.grade} - {data.studentInfo.school}</span>
-                    <span className="text-neutral-300 dark:text-zinc-600 hidden sm:inline">•</span>
-                    <a href={`mailto:${data.studentInfo.email}`} className="hover:text-orange-500 dark:hover:text-orange-400 transition-colors">{data.studentInfo.email}</a>
+                    <span className="text-border hidden sm:inline">•</span>
+                    <a href={`mailto:${data.studentInfo.email}`} className="hover:text-primary transition-colors">{data.studentInfo.email}</a>
                 </div>
             </header>
 

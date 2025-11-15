@@ -86,16 +86,16 @@ const AcademicJourneyPage: React.FC<AcademicJourneyPageProps> = ({ data, setData
     return (
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
             <header className="text-center mb-16">
-                <h1 className="text-4xl md:text-5xl font-extrabold text-zinc-900 dark:text-white">{t.journey.title}</h1>
-                <p className="text-xl text-zinc-600 dark:text-neutral-400 mt-2">{data.studentInfo.semester}</p>
+                <h1 className="text-4xl md:text-5xl font-extrabold text-foreground">{t.journey.title}</h1>
+                <p className="text-xl text-muted-foreground mt-2">{data.studentInfo.semester}</p>
             </header>
 
             <div className="max-w-4xl mx-auto">
-                 <div className="relative ltr:border-l-4 rtl:border-r-4 border-orange-200 dark:border-zinc-700 space-y-16">
+                 <div className="relative ltr:border-l-4 rtl:border-r-4 border-primary/20 space-y-16">
                     {journeyItems.map((item) => (
                         <div key={item.key} className="relative ltr:pl-12 rtl:pr-12">
-                            <div className="absolute ltr:-left-7 rtl:-right-7 top-0 flex items-center justify-center w-14 h-14 bg-white dark:bg-zinc-800 rounded-full ring-4 ring-orange-500">
-                                <item.icon className="w-7 h-7 text-orange-600 dark:text-orange-400" />
+                            <div className="absolute ltr:-left-7 rtl:-right-7 top-0 flex items-center justify-center w-14 h-14 bg-background rounded-full ring-4 ring-primary">
+                                <item.icon className="w-7 h-7 text-primary" />
                             </div>
                             <div>
                                 <EditableSection 
@@ -112,9 +112,9 @@ const AcademicJourneyPage: React.FC<AcademicJourneyPageProps> = ({ data, setData
                 </div>
 
                 <div className="mt-20">
-                    <div className="bg-white dark:bg-zinc-800 p-6 rounded-xl shadow-lg border border-neutral-200/80 dark:border-zinc-700">
+                    <div className="bg-card text-card-foreground p-6 rounded-xl shadow-lg border border-border">
                         <div className="flex justify-center items-center mb-6">
-                            <h3 className="text-3xl font-bold text-zinc-900 dark:text-white text-center">{t.journey.gallery}</h3>
+                            <h3 className="text-3xl font-bold text-foreground text-center">{t.journey.gallery}</h3>
                         </div>
                          {isAdmin && (
                             <div className="mb-6 text-center">
@@ -122,20 +122,20 @@ const AcademicJourneyPage: React.FC<AcademicJourneyPageProps> = ({ data, setData
                                 <button
                                     onClick={() => fileInputRef.current?.click()}
                                     disabled={isUploading}
-                                    className="inline-flex items-center gap-2 px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors disabled:bg-zinc-400 disabled:cursor-not-allowed"
+                                    className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors disabled:bg-muted disabled:cursor-not-allowed"
                                 >
                                     <PlusIcon className="w-5 h-5" />
                                     {t.admin.upload}
                                 </button>
                                 {isUploading && (
                                     <div className="mt-4 w-full max-w-xs mx-auto">
-                                        <div className="w-full bg-neutral-200 dark:bg-zinc-700 rounded-full h-2.5">
+                                        <div className="w-full bg-secondary rounded-full h-2.5">
                                             <div 
-                                                className="bg-orange-600 h-2.5 rounded-full transition-all duration-150" 
+                                                className="bg-primary h-2.5 rounded-full transition-all duration-150" 
                                                 style={{ width: `${uploadProgress}%` }}
                                             ></div>
                                         </div>
-                                        <p className="text-sm text-zinc-600 dark:text-neutral-300 mt-1">{Math.round(uploadProgress)}%</p>
+                                        <p className="text-sm text-muted-foreground mt-1">{Math.round(uploadProgress)}%</p>
                                     </div>
                                 )}
                             </div>
@@ -150,7 +150,7 @@ const AcademicJourneyPage: React.FC<AcademicJourneyPageProps> = ({ data, setData
                                     {isAdmin && (
                                         <button 
                                             onClick={() => handleImageDelete(item.id)}
-                                            className="absolute top-2 right-2 p-2 bg-red-600 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-700"
+                                            className="absolute top-2 right-2 p-2 bg-destructive text-destructive-foreground rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-destructive/90"
                                             title={t.admin.deleteItem}
                                         >
                                            <TrashIcon className="w-5 h-5" />

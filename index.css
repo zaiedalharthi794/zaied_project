@@ -1,0 +1,63 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* Global Variables for Layout, Borders, etc. */
+  :root {
+    --border-radius: 0.75rem;
+  }
+
+  /* ----------------- ORANGE THEME ----------------- */
+  [data-theme="orange"] {
+    /* Light Mode */
+    --background: 240 10% 99%; /* neutral-50 */
+    --foreground: 240 10% 3.9%; /* zinc-950 */
+    --card: 0 0% 100%; /* white */
+    --card-foreground: 240 10% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 24.6 95% 53.1%; /* orange-600 */
+    --primary-foreground: 60 9.1% 97.8%; /* zinc-50 */
+    --secondary: 240 4.8% 95.9%; /* neutral-100 */
+    --secondary-foreground: 240 5.9% 10%; /* zinc-900 */
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%; /* zinc-500 */
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 60 9.1% 97.8%;
+    --border: 240 5.9% 90%; /* neutral-200 */
+    --input: 240 5.9% 90%;
+    --ring: 24.6 95% 53.1%; /* orange-600 */
+  }
+
+  [data-theme="orange"].dark {
+    /* Dark Mode */
+    --background: 240 10% 3.9%; /* zinc-950 */
+    --foreground: 0 0% 98%; /* neutral-50 */
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 35.5 91.7% 54.5%; /* orange-500 */
+    --primary-foreground: 60 9.1% 97.8%;
+    --secondary: 240 3.7% 15.9%; /* zinc-800 */
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%; /* zinc-400 */
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 35.5 91.7% 54.5%; /* orange-500 */
+  }
+}
+
+@layer base {
+  body {
+    @apply bg-background text-foreground transition-colors duration-200;
+  }
+}
