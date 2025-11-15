@@ -1,10 +1,12 @@
 
+
 export interface StudentInfo {
     name: string;
     grade: string;
     school: string;
     email: string;
     semester: string;
+    avatarUrl?: string;
 }
 
 export interface Evaluation {
@@ -100,13 +102,19 @@ export interface Translation {
     theme: {
         light: string;
         dark: string;
-        toggle: string;
+        system: string;
+        select: string;
+        language: string;
+        font: string;
     };
     admin: {
         edit: string;
         save: string;
         addItem: string;
         removeItem: string;
+        upload: string;
+        change: string;
+        deleteItem: string;
     };
 }
 

@@ -1,4 +1,5 @@
 
+
 import { PortfolioData, Translation, Language, GameLevel } from '../types';
 
 export const initialData: PortfolioData = {
@@ -8,6 +9,7 @@ export const initialData: PortfolioData = {
         school: "مدرسة الأندلس الأهلية",
         email: "zaied.alharthi794@gmail.com",
         semester: "الفصل الدراسي الأول",
+        avatarUrl: "https://i.ibb.co/YbfxY0D/image.png",
     },
     aboutMe: "طالب شغوف وطموح في مدرسة الأندلس الأهلية، أسعى لتعلم كل ما هو جديد ومفيد كي لا أصبح جاهلاً، وأطمح لتحسين مهاراتي في البرمجة والذكاء الاصطناعي.",
     education: "أدرس حالياً في الصف الأول متوسط.",
@@ -63,6 +65,7 @@ export const initialDataEn: PortfolioData = {
         school: "Al-Andalus National School",
         email: "zaied.alharthi794@gmail.com",
         semester: "First Semester",
+        avatarUrl: "https://i.ibb.co/YbfxY0D/image.png",
     },
     aboutMe: "A passionate and ambitious student at Al-Andalus National School, I seek to learn everything new and useful so as not to become ignorant, and I aspire to improve my skills in programming and artificial intelligence.",
     education: "Currently studying in the first intermediate grade.",
@@ -231,8 +234,8 @@ const ar: Translation = {
     journey: { title: "رحلتي الأكاديمية", education: "التعليم", selfReflection: "تأملات حول بدايتي", achievements: "الإنجازات الأكاديمية", projects: "المشاريع والأبحاث", volunteer: "الأعمال التطوعية", gallery: "معرض الأعمال" },
     evaluation: { title: "صفحة تقييم المعلمين", prompt: "قيّم يا معلمي الفاضل", teacherName: "اسم المعلم", placeholder: "اكتب تقييمك هنا...", submit: "إرسال التقييم", success: "تم إرسال تقييمك بنجاح. شكراً لك!", previousEvaluations: "التقييمات السابقة" },
     game: { title: "لعبة معلومات عني", welcome: "اختبر معلوماتك عني في هذه اللعبة!", start: "ابدأ اللعبة", next: "السؤال التالي", submit: "تحقق", correct: "إجابة صحيحة!", incorrect: "إجابة خاطئة، حاول مرة أخرى.", finalScore: "نتيجتك النهائية:", congrats: "تهانينا! لقد أكملت اللعبة بنجاح.", hint: "تلميح عني: شغفي الأكبر هو تعلم البرمجة.", playAgain: "العب مرة أخرى", levels: arGameLevels },
-    theme: { light: "فاتح", dark: "داكن", toggle: "تبديل المظهر" },
-    admin: { edit: "تعديل", save: "حفظ", addItem: "إضافة عنصر", removeItem: "حذف" },
+    theme: { light: "فاتح", dark: "داكن", system: "النظام", select: "اختر المظهر", language: "اللغة", font: "الخط" },
+    admin: { edit: "تعديل", save: "حفظ", addItem: "إضافة عنصر", removeItem: "حذف", upload: "رفع صورة جديدة", change: "تغيير", deleteItem: "حذف الصورة" },
 };
 
 const en: Translation = {
@@ -246,8 +249,8 @@ const en: Translation = {
     journey: { title: "My Academic Journey", education: "Education", selfReflection: "Reflections on My Start", achievements: "Academic Achievements", projects: "Projects & Research", volunteer: "Volunteer Work", gallery: "Gallery" },
     evaluation: { title: "Teacher Evaluation Page", prompt: "Evaluate, my dear teacher", teacherName: "Teacher's Name", placeholder: "Write your evaluation here...", submit: "Submit Evaluation", success: "Your evaluation has been submitted successfully. Thank you!", previousEvaluations: "Previous Evaluations" },
     game: { title: "Game: Info About Me", welcome: "Test your knowledge about me in this game!", start: "Start Game", next: "Next Question", submit: "Check", correct: "Correct!", incorrect: "Incorrect, try again.", finalScore: "Your final score:", congrats: "Congratulations! You completed the game.", hint: "Hint about me: My biggest passion is learning to code.", playAgain: "Play Again", levels: enGameLevels },
-    theme: { light: "Light", dark: "Dark", toggle: "Toggle Theme" },
-    admin: { edit: "Edit", save: "Save", addItem: "Add Item", removeItem: "Remove" },
+    theme: { light: "Light", dark: "Dark", system: "System", select: "Select Theme", language: "Language", font: "Font" },
+    admin: { edit: "Edit", save: "Save", addItem: "Add Item", removeItem: "Remove", upload: "Upload New Image", change: "Change", deleteItem: "Delete Image" },
 };
 
 export const translations: { [key: string]: Translation } = { ar, en };

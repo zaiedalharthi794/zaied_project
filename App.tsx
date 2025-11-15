@@ -1,5 +1,4 @@
-
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { HashRouter, Routes, Route, NavLink } from 'react-router-dom';
 import { GoogleGenAI, Type } from "@google/genai";
 import HomePage from './pages/HomePage';
@@ -9,7 +8,10 @@ import GamePage from './pages/GamePage';
 import AdminLogin from './components/AdminLogin';
 import { initialData, initialDataEn, translations } from './data/initialData';
 import { PortfolioData, Language, Translation } from './types';
-import { GraduationCapIcon, LoginIcon, LogoutIcon, MenuIcon, XIcon, MoonIcon, SunIcon } from './components/Icons';
+import { GraduationCapIcon, LoginIcon, LogoutIcon, MenuIcon, XIcon, SettingsIcon } from './components/Icons';
+import { db } from './firebase';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
+import debounce from 'lodash.debounce';
 
 const fonts = [
     { name: 'افتراضي', css: 'sans-serif' },
@@ -121,61 +123,118 @@ const App: React.FC = () => {
     const [showLogin, setShowLogin] = useState<boolean>(false);
     const [language, setLanguage] = useState<Language>('ar');
     const [font, setFont] = useState<string>(() => localStorage.getItem('appFont') || 'sans-serif');
-    const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    
+    // --- Theme Management ---
+    const [theme, setTheme] = useState<'light' | 'dark' | 'system'>(() => {
         const savedTheme = localStorage.getItem('theme');
-        if (savedTheme === 'light' || savedTheme === 'dark') {
+        if (savedTheme === 'light' || savedTheme === 'dark' || savedTheme === 'system') {
             return savedTheme;
         }
-        return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        return 'system';
     });
+
+    useEffect(() => {
+        const root = window.document.documentElement;
+        const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+
+        const applyTheme = () => {
+            const activeTheme = localStorage.getItem('theme') || 'system';
+            const systemIsDark = mediaQuery.matches;
+
+            if (activeTheme === 'dark' || (activeTheme === 'system' && systemIsDark)) {
+                root.classList.add('dark');
+            } else {
+                root.classList.remove('dark');
+            }
+        };
+
+        localStorage.setItem('theme', theme);
+        applyTheme();
+
+        mediaQuery.addEventListener('change', applyTheme);
+
+        return () => {
+            mediaQuery.removeEventListener('change', applyTheme);
+        };
+    }, [theme]);
     
-    const [data, setData] = useState<PortfolioData>(() => {
-        try {
-            const savedData = localStorage.getItem('portfolioData');
-            return savedData ? JSON.parse(savedData) : initialData;
-        } catch (error) {
-            return initialData;
-        }
-    });
+    const handleThemeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setTheme(e.target.value as 'light' | 'dark' | 'system');
+    };
+    // --- End Theme Management ---
+    
+    const [data, setData] = useState<PortfolioData>(initialData);
 
     const [displayData, setDisplayData] = useState<PortfolioData>(data);
     const [cachedPortfolioData, setCachedPortfolioData] = useState<{ [key: string]: PortfolioData }>({ ar: data, en: initialDataEn });
     const [cachedUiTranslations, setCachedUiTranslations] = useState<{ [key: string]: Translation }>(translations);
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+    const settingsMenuRef = useRef<HTMLDivElement>(null);
 
     const t = cachedUiTranslations[language as keyof typeof cachedUiTranslations] || cachedUiTranslations['en'];
+
+    // Fetch data from Firebase on initial load
+    useEffect(() => {
+        const fetchData = async () => {
+            setIsLoading(true);
+            const docRef = doc(db, "portfolio", "main");
+            try {
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    const firestoreData = docSnap.data() as PortfolioData;
+                    setData(firestoreData);
+                    setCachedPortfolioData(prev => ({ ...prev, ar: firestoreData }));
+                } else {
+                    // Document doesn't exist, so let's create it with initial data
+                    console.log("No such document! Seeding database with initial data.");
+                    await setDoc(docRef, initialData);
+                    setData(initialData);
+                    setCachedPortfolioData(prev => ({ ...prev, ar: initialData }));
+                }
+            } catch (error) {
+                console.error("Error fetching or seeding document:", error);
+                setError("Failed to load data from the server.");
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        fetchData();
+    }, []);
+
+    // Debounced function to save data to Firebase
+    const debouncedSave = useCallback(
+        debounce(async (newData: PortfolioData) => {
+            try {
+                const docRef = doc(db, "portfolio", "main");
+                await setDoc(docRef, newData);
+                 // When admin saves new data, it's in Arabic. Invalidate other language caches.
+                setCachedPortfolioData({ ar: newData, en: initialDataEn });
+            } catch (error) {
+                console.error("Failed to save portfolio data to Firebase:", error);
+                setError("Failed to save changes.");
+            }
+        }, 1000), 
+        []
+    );
+
+    // Save data to Firebase whenever it changes
+    useEffect(() => {
+        // Don't save the initial boilerplate data on first render
+        if (!isLoading) {
+            debouncedSave(data);
+        }
+    }, [data, isLoading, debouncedSave]);
+
 
     useEffect(() => {
         const adminStatus = localStorage.getItem('isAdmin') === 'true';
         setIsAdmin(adminStatus);
     }, []);
 
-    useEffect(() => {
-        if (theme === 'dark') {
-            document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.classList.remove('dark');
-        }
-        localStorage.setItem('theme', theme);
-    }, [theme]);
-
-    useEffect(() => {
-        try {
-            localStorage.setItem('portfolioData', JSON.stringify(data));
-            // When admin saves new data, it's in Arabic. Invalidate other language caches.
-            setCachedPortfolioData({ ar: data, en: initialDataEn });
-            // If viewing Arabic, update display data immediately.
-            if (language === 'ar') {
-                 setDisplayData(data);
-            }
-        } catch (error) {
-            console.error("Failed to save portfolio data:", error);
-        }
-    }, [data]);
-    
     useEffect(() => {
         document.documentElement.lang = language;
         document.documentElement.dir = language === 'ar' ? 'rtl' : 'ltr';
@@ -188,10 +247,28 @@ const App: React.FC = () => {
         document.documentElement.style.setProperty('--main-font', font);
         localStorage.setItem('appFont', font);
     }, [font]);
+    
+     useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (settingsMenuRef.current && !settingsMenuRef.current.contains(event.target as Node)) {
+                setIsSettingsOpen(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
 
     useEffect(() => {
         const translateApp = async () => {
-            if (language === 'ar' || language === 'en') {
+             // Use the live data for Arabic
+            if (language === 'ar') {
+                setDisplayData(data);
+                return;
+            }
+            if (language === 'en') {
                 setDisplayData(cachedPortfolioData[language]!);
                 return;
             };
@@ -210,7 +287,7 @@ const App: React.FC = () => {
                 const gameQuestionSchema = { type: Type.OBJECT, properties: { question: { type: Type.STRING }, options: { type: Type.ARRAY, items: { type: Type.STRING } }, answer: { type: Type.STRING } } };
                 const gameLevelSchema = { type: Type.OBJECT, properties: { title: { type: Type.STRING }, questions: { type: Type.ARRAY, items: gameQuestionSchema } } };
                 const navSchema = { type: Type.OBJECT, properties: { home: { type: Type.STRING }, journey: { type: Type.STRING }, evaluation: { type: Type.STRING }, game: { type: Type.STRING } } };
-                const studentInfoSchema = { type: Type.OBJECT, properties: { name: { type: Type.STRING }, grade: { type: Type.STRING }, school: { type: Type.STRING }, email: { type: Type.STRING }, semester: { type: Type.STRING } } };
+                const studentInfoSchema = { type: Type.OBJECT, properties: { name: { type: Type.STRING }, grade: { type: Type.STRING }, school: { type: Type.STRING }, email: { type: Type.STRING }, semester: { type: Type.STRING }, avatarUrl: { type: Type.STRING } } };
                 
                 const combinedSchema = {
                     type: Type.OBJECT,
@@ -226,8 +303,8 @@ const App: React.FC = () => {
                                 journey: { type: Type.OBJECT, properties: { title: { type: Type.STRING }, education: { type: Type.STRING }, selfReflection: { type: Type.STRING }, achievements: { type: Type.STRING }, projects: { type: Type.STRING }, volunteer: { type: Type.STRING }, gallery: { type: Type.STRING } } },
                                 evaluation: { type: Type.OBJECT, properties: { title: { type: Type.STRING }, prompt: { type: Type.STRING }, teacherName: { type: Type.STRING }, placeholder: { type: Type.STRING }, submit: { type: Type.STRING }, success: { type: Type.STRING }, previousEvaluations: { type: Type.STRING } } },
                                 game: { type: Type.OBJECT, properties: { title: { type: Type.STRING }, welcome: { type: Type.STRING }, start: { type: Type.STRING }, next: { type: Type.STRING }, submit: { type: Type.STRING }, correct: { type: Type.STRING }, incorrect: { type: Type.STRING }, finalScore: { type: Type.STRING }, congrats: { type: Type.STRING }, hint: { type: Type.STRING }, playAgain: { type: Type.STRING }, levels: { type: Type.ARRAY, items: gameLevelSchema } } },
-                                admin: { type: Type.OBJECT, properties: { edit: { type: Type.STRING }, save: { type: Type.STRING }, addItem: { type: Type.STRING }, removeItem: { type: Type.STRING } } },
-                                theme: { type: Type.OBJECT, properties: { light: { type: Type.STRING }, dark: { type: Type.STRING }, toggle: { type: Type.STRING } } },
+                                admin: { type: Type.OBJECT, properties: { edit: { type: Type.STRING }, save: { type: Type.STRING }, addItem: { type: Type.STRING }, removeItem: { type: Type.STRING }, upload: { type: Type.STRING }, change: { type: Type.STRING }, deleteItem: { type: Type.STRING } } },
+                                theme: { type: Type.OBJECT, properties: { light: { type: Type.STRING }, dark: { type: Type.STRING }, system: {type: Type.STRING}, select: { type: Type.STRING }, language: { type: Type.STRING }, font: { type: Type.STRING } } },
                             }
                         },
                         portfolio: {
@@ -251,10 +328,13 @@ const App: React.FC = () => {
                 };
 
                 const targetLanguageName = languages.find(l => l.code === language)?.name || language;
+                
+                // Use the English data from the cached state as the source for translation
+                const sourcePortfolioData = initialDataEn;
 
                 const response = await ai.models.generateContent({
                     model: 'gemini-2.5-flash',
-                    contents: `Translate the following JSON object from English to ${targetLanguageName}. The JSON contains UI text and portfolio content for a student's website. Ensure the translated JSON structure is identical to the original. The 'answer' field in the game questions must be one of the 'options' strings exactly. Here is the JSON to translate: \n\n${JSON.stringify({ ui: translations.en, portfolio: initialDataEn })}`,
+                    contents: `Translate the following JSON object from English to ${targetLanguageName}. The JSON contains UI text and portfolio content for a student's website. Ensure the translated JSON structure is identical to the original. The 'answer' field in the game questions must be one of the 'options' strings exactly. Here is the JSON to translate: \n\n${JSON.stringify({ ui: translations.en, portfolio: sourcePortfolioData })}`,
                     config: {
                         responseMimeType: "application/json",
                         responseSchema: combinedSchema,
@@ -280,7 +360,7 @@ const App: React.FC = () => {
         };
 
         translateApp();
-    }, [language]);
+    }, [language, data]); // Add data as a dependency
 
 
     const handleLogin = (password: string) => {
@@ -306,10 +386,6 @@ const App: React.FC = () => {
         setFont(e.target.value);
     };
 
-    const toggleTheme = () => {
-        setTheme(prevTheme => (prevTheme === 'light' ? 'dark' : 'light'));
-    };
-
     const closeMobileMenu = () => setIsMobileMenuOpen(false);
     
     const activeLinkClass = "text-amber-600 dark:text-amber-400 font-semibold";
@@ -321,10 +397,12 @@ const App: React.FC = () => {
     return (
         <HashRouter>
             <div className={`min-h-screen bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-200`}>
-                {isLoading && (
+                {(isLoading || (language !== 'ar' && !cachedPortfolioData[language])) && (
                     <div className="fixed inset-0 bg-black bg-opacity-80 flex flex-col items-center justify-center z-[9999] backdrop-blur-sm">
                         <div className="w-16 h-16 border-4 border-dashed rounded-full animate-spin border-amber-500"></div>
-                        <p className="text-white text-xl mt-4">Translating...</p>
+                        <p className="text-white text-xl mt-4">
+                           {language === 'ar' ? 'Loading Data...' : 'Translating...'}
+                        </p>
                     </div>
                 )}
                 <header className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm shadow-sm sticky top-0 z-50 border-b border-gray-200 dark:border-gray-800">
@@ -345,21 +423,7 @@ const App: React.FC = () => {
                                 </div>
                             </div>
                             <div className="flex items-center">
-                                <div className="hidden md:flex items-center space-x-4 rtl:space-x-reverse">
-                                    <button onClick={toggleTheme} className="p-2 rounded-full text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-200 dark:focus:ring-offset-gray-700 focus:ring-amber-500 transition-colors" aria-label={t.theme.toggle}>
-                                        <span className="sr-only">{t.theme.toggle}</span>
-                                        {theme === 'light' ? <MoonIcon className="h-6 w-6" /> : <SunIcon className="h-6 w-6" />}
-                                    </button>
-                                    {language === 'ar' && (
-                                        <select onChange={handleFontChange} value={font} className="bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white px-2 py-1.5 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 border border-gray-300 dark:border-gray-600">
-                                            {fonts.map(f => <option key={f.name} value={f.css}>{f.name}</option>)}
-                                        </select>
-                                    )}
-                                    <select onChange={handleLanguageChange} value={language} className="bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white px-2 py-1.5 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 border border-gray-300 dark:border-gray-600">
-                                        {languages.map(lang => (
-                                            <option key={lang.code} value={lang.code}>{lang.name}</option>
-                                        ))}
-                                    </select>
+                                 <div className="hidden md:flex items-center space-x-2 rtl:space-x-reverse">
                                     {isAdmin ? (
                                         <button onClick={handleLogout} className="p-2 rounded-full text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-200 dark:focus:ring-offset-gray-700 focus:ring-amber-500 transition-colors" aria-label="Logout">
                                             <LogoutIcon className="h-6 w-6" />
@@ -369,6 +433,41 @@ const App: React.FC = () => {
                                             <LoginIcon className="h-6 w-6" />
                                         </button>
                                     )}
+                                     <div className="relative" ref={settingsMenuRef}>
+                                        <button onClick={() => setIsSettingsOpen(!isSettingsOpen)} className="p-2 rounded-full text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-200 dark:focus:ring-offset-gray-700 focus:ring-amber-500 transition-colors" aria-label="Settings">
+                                            <SettingsIcon className="h-6 w-6" />
+                                        </button>
+                                        {isSettingsOpen && (
+                                            <div className="absolute ltr:right-0 rtl:left-0 mt-2 w-64 origin-top-right bg-white dark:bg-gray-800 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50 p-4 border dark:border-gray-700">
+                                                <div className="space-y-4">
+                                                    <div>
+                                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t.theme.select}</label>
+                                                        <select onChange={handleThemeChange} value={theme} className="w-full bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white px-2 py-1.5 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 border border-gray-300 dark:border-gray-600">
+                                                            <option value="light">{t.theme.light}</option>
+                                                            <option value="dark">{t.theme.dark}</option>
+                                                            <option value="system">{t.theme.system}</option>
+                                                        </select>
+                                                    </div>
+                                                    <div>
+                                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t.theme.language}</label>
+                                                        <select onChange={handleLanguageChange} value={language} className="w-full bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white px-2 py-1.5 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 border border-gray-300 dark:border-gray-600">
+                                                            {languages.map(lang => (
+                                                                <option key={lang.code} value={lang.code}>{lang.name}</option>
+                                                            ))}
+                                                        </select>
+                                                    </div>
+                                                    {language === 'ar' && (
+                                                        <div>
+                                                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t.theme.font}</label>
+                                                            <select onChange={handleFontChange} value={font} className="w-full bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white px-2 py-1.5 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 border border-gray-300 dark:border-gray-600">
+                                                                {fonts.map(f => <option key={f.name} value={f.css}>{f.name}</option>)}
+                                                            </select>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
                                 <div className="flex md:hidden">
                                      <button
@@ -394,31 +493,38 @@ const App: React.FC = () => {
                             <NavLink to="/game" onClick={closeMobileMenu} className={({ isActive }) => `${isActive ? mobileActiveLinkClass : mobileInactiveLinkClass} block px-3 py-2 rounded-md text-base font-medium transition-colors`}>{t.nav.game}</NavLink>
                         </div>
                         <div className="pt-4 pb-3 border-t border-gray-200 dark:border-gray-700">
-                           <div className="flex items-center justify-center px-5 gap-x-4">
-                                <button onClick={toggleTheme} className="p-2 rounded-full text-gray-700 dark:text-amber-200 hover:bg-gray-200 dark:hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-amber-500 transition-colors" aria-label={t.theme.toggle}>
-                                    <span className="sr-only">{t.theme.toggle}</span>
-                                    {theme === 'light' ? <MoonIcon className="h-6 w-6" /> : <SunIcon className="h-6 w-6" />}
-                                </button>
-                               {language === 'ar' && (
-                                   <select onChange={handleFontChange} value={font} className="bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white px-2 py-1.5 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 border border-gray-300 dark:border-gray-600">
-                                       {fonts.map(f => <option key={f.name} value={f.css}>{f.name}</option>)}
-                                   </select>
-                               )}
-                                <select onChange={handleLanguageChange} value={language} className="bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white px-2 py-1.5 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 border border-gray-300 dark:border-gray-600">
-                                    {languages.map(lang => (
-                                        <option key={lang.code} value={lang.code}>{lang.name}</option>
-                                    ))}
-                                </select>
-                                {isAdmin ? (
-                                    <button onClick={() => { handleLogout(); closeMobileMenu(); }} className="p-2 rounded-full text-gray-700 dark:text-amber-200 hover:bg-gray-200 dark:hover:bg-gray-800" aria-label="Logout">
-                                        <LogoutIcon className="h-6 w-6" />
-                                    </button>
-                                ) : (
-                                    <button onClick={() => { setShowLogin(true); closeMobileMenu(); }} className="p-2 rounded-full text-gray-700 dark:text-amber-200 hover:bg-gray-200 dark:hover:bg-gray-800" aria-label="Admin Login">
-                                        <LoginIcon className="h-6 w-6" />
-                                    </button>
-                                )}
-                           </div>
+                            <div className="px-4 space-y-4">
+                                <div className="grid grid-cols-2 gap-4">
+                                    <select onChange={handleThemeChange} value={theme} title={t.theme.select} className="w-full bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white px-2 py-1.5 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 border border-gray-300 dark:border-gray-600">
+                                        <option value="light">{t.theme.light}</option>
+                                        <option value="dark">{t.theme.dark}</option>
+                                        <option value="system">{t.theme.system}</option>
+                                    </select>
+                                    <select onChange={handleLanguageChange} value={language} title={t.theme.language} className="w-full bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white px-2 py-1.5 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 border border-gray-300 dark:border-gray-600">
+                                        {languages.map(lang => (
+                                            <option key={lang.code} value={lang.code}>{lang.name}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div className="grid grid-cols-2 gap-4 items-center">
+                                    {language === 'ar' ? (
+                                    <select onChange={handleFontChange} value={font} title={t.theme.font} className="w-full bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white px-2 py-1.5 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 border border-gray-300 dark:border-gray-600">
+                                        {fonts.map(f => <option key={f.name} value={f.css}>{f.name}</option>)}
+                                    </select>
+                                    ) : <div />} 
+                                    {isAdmin ? (
+                                        <button onClick={() => { handleLogout(); closeMobileMenu(); }} className="w-full flex justify-center items-center gap-2 p-2 rounded-md text-gray-700 dark:text-amber-200 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700" aria-label="Logout">
+                                            <LogoutIcon className="h-5 w-5" />
+                                            <span className="text-sm">Logout</span>
+                                        </button>
+                                    ) : (
+                                        <button onClick={() => { setShowLogin(true); closeMobileMenu(); }} className="w-full flex justify-center items-center gap-2 p-2 rounded-md text-gray-700 dark:text-amber-200 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700" aria-label="Admin Login">
+                                            <LoginIcon className="h-5 w-5" />
+                                            <span className="text-sm">Login</span>
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </header>
