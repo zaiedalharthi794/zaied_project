@@ -7,21 +7,38 @@ export interface StudentInfo {
     semester: string;
 }
 
+export interface Evaluation {
+    teacher: string;
+    text: string;
+}
+
 export interface PortfolioData {
     studentInfo: StudentInfo;
     aboutMe: string;
     education: string;
+    selfReflection: string; // Added this line
     achievements: string[];
     skills: string[];
     projects: string[];
     volunteerWork: string[];
     hobbies: string[];
     goals: string[];
-    evaluations: string[];
+    evaluations: Evaluation[];
     gallery: { id: number; imageUrl: string; caption: string }[];
 }
 
-export type Language = 'ar' | 'en' | 'fr' | 'es';
+export type Language = string;
+
+export interface GameQuestion {
+    question: string;
+    options: string[];
+    answer: string;
+}
+
+export interface GameLevel {
+    title: string;
+    questions: GameQuestion[];
+}
 
 export interface Translation {
     appName: string;
@@ -51,6 +68,7 @@ export interface Translation {
     journey: {
         title: string;
         education: string;
+        selfReflection: string; // Added this line
         achievements: string;
         projects: string;
         volunteer: string;
@@ -59,6 +77,7 @@ export interface Translation {
     evaluation: {
         title: string;
         prompt: string;
+        teacherName: string;
         placeholder: string;
         submit: string;
         success: string;
@@ -76,6 +95,12 @@ export interface Translation {
         congrats: string;
         hint: string;
         playAgain: string;
+        levels: GameLevel[];
+    };
+    theme: {
+        light: string;
+        dark: string;
+        toggle: string;
     };
     admin: {
         edit: string;
@@ -91,4 +116,5 @@ export interface EditableSectionProps {
     onSave: (newContent: string | string[]) => void;
     isAdmin: boolean;
     isList?: boolean;
+    t: Translation;
 }
