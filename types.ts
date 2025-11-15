@@ -75,6 +75,7 @@ export interface Translation {
         projects: string;
         volunteer: string;
         gallery: string;
+        captionPrompt: string;
     };
     evaluation: {
         title: string;
@@ -115,6 +116,12 @@ export interface Translation {
         upload: string;
         change: string;
         deleteItem: string;
+        uploadError: string;
+        deleteConfirm: string;
+        deleteError: string;
+        avatarUploadError: string;
+        imageTooLargeError: string;
+        imageReadError: string;
     };
     chatbot: {
         title: string;

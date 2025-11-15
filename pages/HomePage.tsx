@@ -10,15 +10,6 @@ interface HomePageProps {
     t: Translation;
 }
 
-const convertToBase64 = (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => resolve(reader.result as string);
-        reader.onerror = error => reject(error);
-    });
-};
-
 const HomePage: React.FC<HomePageProps> = ({ data, setData, isAdmin, t }) => {
     const [isUploading, setIsUploading] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -36,23 +27,30 @@ const HomePage: React.FC<HomePageProps> = ({ data, setData, isAdmin, t }) => {
     const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
+        
+        if (file.size > 500 * 1024) { // 500 KB limit
+            alert(t.admin.imageTooLargeError || "Image is too large. Please upload an image smaller than 500KB.");
+            return;
+        }
 
         setIsUploading(true);
-        try {
-            const base64String = await convertToBase64(file);
+        const reader = new FileReader();
+        reader.onloadend = () => {
             setData(prevData => ({
                 ...prevData,
                 studentInfo: {
                     ...prevData.studentInfo,
-                    avatarUrl: base64String
+                    avatarUrl: reader.result as string
                 }
             }));
-        } catch (error) {
-            console.error("Error converting image to Base64: ", error);
-            alert("Failed to upload image.");
-        } finally {
             setIsUploading(false);
-        }
+        };
+        reader.onerror = () => {
+            console.error("Error reading file");
+            alert(t.admin.imageReadError || "Failed to read the image file.");
+            setIsUploading(false);
+        };
+        reader.readAsDataURL(file);
     };
 
     return (

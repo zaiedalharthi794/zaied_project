@@ -10,18 +10,8 @@ interface AcademicJourneyPageProps {
     t: Translation;
 }
 
-const convertToBase64 = (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => resolve(reader.result as string);
-        reader.onerror = error => reject(error);
-    });
-};
-
 const AcademicJourneyPage: React.FC<AcademicJourneyPageProps> = ({ data, setData, isAdmin, t }) => {
     const [isUploading, setIsUploading] = useState(false);
-    const [uploadProgress, setUploadProgress] = useState(0);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const handleSave = (key: keyof PortfolioData, content: string | string[]) => {
@@ -32,20 +22,25 @@ const AcademicJourneyPage: React.FC<AcademicJourneyPageProps> = ({ data, setData
         const file = e.target.files?.[0];
         if (!file) return;
 
-        const caption = prompt("Enter a caption for the new image:");
+        if (file.size > 500 * 1024) { // 500 KB limit
+            alert(t.admin.imageTooLargeError || "Image is too large. Please upload an image smaller than 500KB.");
+            if(fileInputRef.current) fileInputRef.current.value = "";
+            return;
+        }
+
+        const caption = prompt(t.journey.captionPrompt || "Enter a caption for the new image:");
         if (caption === null) {
             if(fileInputRef.current) fileInputRef.current.value = "";
             return; 
         };
 
         setIsUploading(true);
-        setUploadProgress(50); 
-
-        try {
-            const base64String = await convertToBase64(file);
+        
+        const reader = new FileReader();
+        reader.onloadend = () => {
             const newImage = {
                 id: Date.now(),
-                imageUrl: base64String,
+                imageUrl: reader.result as string,
                 caption: caption || "New Image",
             };
 
@@ -53,22 +48,21 @@ const AcademicJourneyPage: React.FC<AcademicJourneyPageProps> = ({ data, setData
                 ...prevData,
                 gallery: [...(prevData.gallery || []), newImage]
             }));
-            setUploadProgress(100);
-
-        } catch (error) {
-            console.error("Error uploading image: ", error);
-            alert("Failed to upload image.");
-        } finally {
-            setTimeout(() => {
-                setIsUploading(false);
-                setUploadProgress(0);
-                 if(fileInputRef.current) fileInputRef.current.value = "";
-            }, 500);
-        }
+            setIsUploading(false);
+            if(fileInputRef.current) fileInputRef.current.value = "";
+        };
+        reader.onerror = () => {
+            console.error("Error reading file");
+            alert(t.admin.uploadError || "Failed to upload image.");
+            setIsUploading(false);
+            if(fileInputRef.current) fileInputRef.current.value = "";
+        };
+        reader.readAsDataURL(file);
     };
 
     const handleImageDelete = async (imageId: number) => {
-        if (!window.confirm("Are you sure you want to delete this image?")) return;
+        if (!window.confirm(t.admin.deleteConfirm || "Are you sure you want to delete this image?")) return;
+        
         setData(prevData => ({
             ...prevData,
             gallery: prevData.gallery.filter(item => item.id !== imageId)
@@ -127,17 +121,6 @@ const AcademicJourneyPage: React.FC<AcademicJourneyPageProps> = ({ data, setData
                                     <PlusIcon className="w-5 h-5" />
                                     {t.admin.upload}
                                 </button>
-                                {isUploading && (
-                                    <div className="mt-4 w-full max-w-xs mx-auto">
-                                        <div className="w-full bg-secondary rounded-full h-2.5">
-                                            <div 
-                                                className="bg-primary h-2.5 rounded-full transition-all duration-150" 
-                                                style={{ width: `${uploadProgress}%` }}
-                                            ></div>
-                                        </div>
-                                        <p className="text-sm text-muted-foreground mt-1">{Math.round(uploadProgress)}%</p>
-                                    </div>
-                                )}
                             </div>
                         )}
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
