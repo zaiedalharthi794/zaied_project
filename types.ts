@@ -100,10 +100,10 @@ export interface Translation {
         levels: GameLevel[];
     };
     theme: {
+        select: string;
         light: string;
         dark: string;
         system: string;
-        select: string;
         language: string;
         font: string;
     };
@@ -116,6 +116,12 @@ export interface Translation {
         change: string;
         deleteItem: string;
     };
+    chatbot: {
+        title: string;
+        placeholder: string;
+        close: string;
+        initialMessage: string;
+    };
 }
 
 export interface EditableSectionProps {
@@ -125,4 +131,9 @@ export interface EditableSectionProps {
     isAdmin: boolean;
     isList?: boolean;
     t: Translation;
+}
+
+export interface ChatMessage {
+    role: 'user' | 'model';
+    text: string;
 }

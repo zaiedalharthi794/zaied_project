@@ -16,8 +16,8 @@ const GamePage: React.FC<{t: Translation}> = ({ t }) => {
     if (!levels.length) {
         return (
              <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
-                <div className="max-w-3xl mx-auto bg-white dark:bg-gray-800 p-8 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700 min-h-[450px] flex flex-col justify-center items-center">
-                   <p className="text-xl text-gray-600 dark:text-gray-300">Loading Game...</p>
+                <div className="max-w-3xl mx-auto bg-white dark:bg-zinc-800 p-8 rounded-xl shadow-2xl border border-neutral-200 dark:border-zinc-700 min-h-[450px] flex flex-col justify-center items-center">
+                   <p className="text-xl text-zinc-600 dark:text-neutral-300">Loading Game...</p>
                 </div>
             </div>
         )
@@ -83,8 +83,8 @@ const GamePage: React.FC<{t: Translation}> = ({ t }) => {
                 return (
                     <div className="text-center">
                         <h2 className="text-3xl font-bold mb-4">{t.game.title}</h2>
-                        <p className="text-lg text-gray-600 dark:text-gray-300 mb-8">{t.game.welcome}</p>
-                        <button onClick={handleStartGame} className="bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-8 rounded-lg text-lg transition-transform transform hover:scale-105">
+                        <p className="text-lg text-zinc-600 dark:text-neutral-300 mb-8">{t.game.welcome}</p>
+                        <button onClick={handleStartGame} className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-8 rounded-lg text-lg transition-transform transform hover:scale-105">
                             {t.game.start}
                         </button>
                     </div>
@@ -93,8 +93,8 @@ const GamePage: React.FC<{t: Translation}> = ({ t }) => {
                 return (
                     <div>
                         <div className="mb-6 text-center">
-                            <p className="text-lg font-bold text-amber-600 dark:text-amber-400">{currentLevel.title}</p>
-                            <p className="text-gray-600 dark:text-gray-300">Question {currentQuestionIndex + 1} of {currentLevel.questions.length}</p>
+                            <p className="text-lg font-bold text-orange-600 dark:text-orange-400">{currentLevel.title}</p>
+                            <p className="text-zinc-600 dark:text-neutral-300">Question {currentQuestionIndex + 1} of {currentLevel.questions.length}</p>
                             <h2 className="text-2xl font-semibold mt-2">{currentQuestion.question}</h2>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
@@ -107,9 +107,9 @@ const GamePage: React.FC<{t: Translation}> = ({ t }) => {
                                 } else if (isIncorrect) {
                                     buttonClass += "bg-red-600 border-red-500 text-white";
                                 } else if (selectedAnswer === option) {
-                                    buttonClass += "bg-amber-500 dark:bg-amber-800 border-amber-600 dark:border-amber-700 text-white";
+                                    buttonClass += "bg-orange-500 dark:bg-orange-600 border-orange-600 dark:border-orange-500 text-white";
                                 } else {
-                                    buttonClass += "bg-gray-100 dark:bg-gray-800 border-gray-200 dark:border-gray-600 hover:bg-amber-100 dark:hover:bg-amber-900 hover:border-amber-500 dark:hover:border-amber-500";
+                                    buttonClass += "bg-neutral-100 dark:bg-zinc-700 border-neutral-200 dark:border-zinc-600 hover:bg-orange-500/10 dark:hover:bg-zinc-600 hover:border-orange-500 dark:hover:border-orange-500";
                                 }
                                 return (
                                     <button key={option} onClick={() => handleAnswerSelect(option)} className={buttonClass} disabled={isAnswered}>
@@ -119,7 +119,7 @@ const GamePage: React.FC<{t: Translation}> = ({ t }) => {
                             })}
                         </div>
                         {!isAnswered ? (
-                            <button onClick={handleSubmitAnswer} disabled={selectedAnswer === null} className="w-full bg-amber-600 hover:bg-amber-700 text-white font-bold py-3 px-4 rounded-lg disabled:bg-gray-400 disabled:cursor-not-allowed">
+                            <button onClick={handleSubmitAnswer} disabled={selectedAnswer === null} className="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-4 rounded-lg disabled:bg-zinc-400 disabled:cursor-not-allowed">
                                 {t.game.submit}
                             </button>
                         ) : (
@@ -127,7 +127,7 @@ const GamePage: React.FC<{t: Translation}> = ({ t }) => {
                                 <p className={`text-xl font-bold mb-4 ${selectedAnswer === currentQuestion.answer ? 'text-green-500 dark:text-green-400' : 'text-red-500 dark:text-red-400'}`}>
                                     {selectedAnswer === currentQuestion.answer ? t.game.correct : t.game.incorrect}
                                 </p>
-                                <button onClick={handleNext} className="w-full bg-amber-600 hover:bg-amber-700 text-white font-bold py-3 px-4 rounded-lg">
+                                <button onClick={handleNext} className="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-4 rounded-lg">
                                     {currentQuestionIndex < currentLevel.questions.length - 1 ? t.game.next : "Finish Level"}
                                 </button>
                             </div>
@@ -139,7 +139,7 @@ const GamePage: React.FC<{t: Translation}> = ({ t }) => {
                  return (
                     <div className="text-center">
                         <h2 className="text-3xl font-bold mb-4">🎉 Well done! You've completed {currentLevel.title} 🎉</h2>
-                        <p className="text-xl text-gray-600 dark:text-gray-300 mb-8">Current Score: {score} / {levels.slice(0, currentLevelIndex + 1).reduce((a, c) => a + c.questions.length, 0)}</p>
+                        <p className="text-xl text-zinc-600 dark:text-neutral-300 mb-8">Current Score: {score} / {levels.slice(0, currentLevelIndex + 1).reduce((a, c) => a + c.questions.length, 0)}</p>
                         <button onClick={handleNextLevel} className="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-lg text-lg transition-transform transform hover:scale-105">
                             {isLastLevel ? "View Final Score" : "Next Level"}
                         </button>
@@ -149,11 +149,11 @@ const GamePage: React.FC<{t: Translation}> = ({ t }) => {
                 return (
                     <div className="text-center">
                         <h2 className="text-3xl font-bold mb-4">{t.game.congrats}</h2>
-                        <p className="text-xl text-gray-600 dark:text-gray-300 mb-4">{t.game.finalScore} {score} / {totalQuestions}</p>
-                        <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg mb-8 border-l-4 border-amber-500">
-                            <p className="text-lg text-gray-700 dark:text-amber-300">{t.game.hint}</p>
+                        <p className="text-xl text-zinc-600 dark:text-neutral-300 mb-4">{t.game.finalScore} {score} / {totalQuestions}</p>
+                        <div className="bg-neutral-100 dark:bg-zinc-800 p-4 rounded-lg mb-8 border-l-4 border-orange-500">
+                            <p className="text-lg text-zinc-700 dark:text-orange-300">{t.game.hint}</p>
                         </div>
-                        <button onClick={handleStartGame} className="bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-8 rounded-lg text-lg transition-transform transform hover:scale-105">
+                        <button onClick={handleStartGame} className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-8 rounded-lg text-lg transition-transform transform hover:scale-105">
                             {t.game.playAgain}
                         </button>
                     </div>
@@ -163,7 +163,7 @@ const GamePage: React.FC<{t: Translation}> = ({ t }) => {
 
     return (
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
-            <div className="max-w-3xl mx-auto bg-white dark:bg-gray-800 p-8 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700 min-h-[450px] flex flex-col justify-center">
+            <div className="max-w-3xl mx-auto bg-white dark:bg-zinc-800 p-8 rounded-xl shadow-2xl border border-neutral-200 dark:border-zinc-700 min-h-[450px] flex flex-col justify-center">
                 {renderContent()}
             </div>
         </div>

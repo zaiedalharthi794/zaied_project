@@ -1,9 +1,6 @@
-
 import React, { useState, useRef } from 'react';
 import { PortfolioData, Translation } from '../types';
 import EditableSection from '../components/EditableSection';
-import { storage } from '../firebase';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { EditIcon } from '../components/Icons';
 
 interface HomePageProps {
@@ -12,6 +9,15 @@ interface HomePageProps {
     isAdmin: boolean;
     t: Translation;
 }
+
+const convertToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = error => reject(error);
+    });
+};
 
 const HomePage: React.FC<HomePageProps> = ({ data, setData, isAdmin, t }) => {
     const [isUploading, setIsUploading] = useState(false);
@@ -33,19 +39,16 @@ const HomePage: React.FC<HomePageProps> = ({ data, setData, isAdmin, t }) => {
 
         setIsUploading(true);
         try {
-            const storageRef = ref(storage, `avatars/avatar_${Date.now()}`);
-            const snapshot = await uploadBytes(storageRef, file);
-            const downloadURL = await getDownloadURL(snapshot.ref);
-            
+            const base64String = await convertToBase64(file);
             setData(prevData => ({
                 ...prevData,
                 studentInfo: {
                     ...prevData.studentInfo,
-                    avatarUrl: downloadURL
+                    avatarUrl: base64String
                 }
             }));
         } catch (error) {
-            console.error("Error uploading avatar: ", error);
+            console.error("Error converting image to Base64: ", error);
             alert("Failed to upload image.");
         } finally {
             setIsUploading(false);
@@ -54,9 +57,9 @@ const HomePage: React.FC<HomePageProps> = ({ data, setData, isAdmin, t }) => {
 
     return (
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
-            <header className="text-center mb-16 py-10 bg-white dark:bg-gray-800/50 rounded-2xl shadow-sm">
-                <div className={`relative inline-block p-1 bg-gradient-to-r from-amber-400 to-amber-600 rounded-full ${isAdmin ? 'cursor-pointer' : ''}`} onClick={handleAvatarClick}>
-                  <img src={data.studentInfo.avatarUrl} alt="Graduate Avatar" className="h-40 w-40 rounded-full object-cover border-4 border-white dark:border-gray-800" />
+            <header className="text-center mb-16 py-10 bg-white dark:bg-zinc-800/50 rounded-2xl shadow-sm">
+                <div className={`relative inline-block p-1 bg-gradient-to-r from-orange-400 to-orange-600 rounded-full ${isAdmin ? 'cursor-pointer' : ''}`} onClick={handleAvatarClick}>
+                  <img src={data.studentInfo.avatarUrl} alt="Graduate Avatar" className="h-40 w-40 rounded-full object-cover border-4 border-white dark:border-zinc-800" />
                    {isAdmin && (
                      <div className="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-50 flex items-center justify-center rounded-full transition-opacity">
                          <EditIcon className="w-8 h-8 text-white opacity-0 hover:opacity-100" />
@@ -69,12 +72,12 @@ const HomePage: React.FC<HomePageProps> = ({ data, setData, isAdmin, t }) => {
                    )}
                 </div>
                  {isAdmin && <input type="file" ref={fileInputRef} onChange={handleAvatarChange} accept="image/*" className="hidden" />}
-                <h1 className="text-4xl md:text-6xl font-extrabold text-gray-900 dark:text-white mt-4">{t.home.welcome}</h1>
-                <p className="text-xl text-gray-600 dark:text-gray-300 mt-2">{t.home.student}: {data.studentInfo.name}</p>
-                 <div className="mt-4 text-gray-500 dark:text-gray-400 flex justify-center items-center gap-4 flex-wrap">
+                <h1 className="text-4xl md:text-6xl font-extrabold text-zinc-900 dark:text-white mt-4">{t.home.welcome}</h1>
+                <p className="text-xl text-zinc-600 dark:text-neutral-300 mt-2">{t.home.student}: {data.studentInfo.name}</p>
+                 <div className="mt-4 text-zinc-500 dark:text-neutral-400 flex justify-center items-center gap-4 flex-wrap">
                     <span>{data.studentInfo.grade} - {data.studentInfo.school}</span>
-                    <span className="text-gray-300 dark:text-gray-600 hidden sm:inline">•</span>
-                    <a href={`mailto:${data.studentInfo.email}`} className="hover:text-amber-600 dark:hover:text-amber-400 transition-colors">{data.studentInfo.email}</a>
+                    <span className="text-neutral-300 dark:text-zinc-600 hidden sm:inline">•</span>
+                    <a href={`mailto:${data.studentInfo.email}`} className="hover:text-orange-500 dark:hover:text-orange-400 transition-colors">{data.studentInfo.email}</a>
                 </div>
             </header>
 

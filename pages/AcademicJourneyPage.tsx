@@ -1,9 +1,6 @@
-
 import React, { useState, useRef } from 'react';
 import { PortfolioData, Translation } from '../types';
 import EditableSection from '../components/EditableSection';
-import { storage } from '../firebase';
-import { ref, uploadBytesResumable, getDownloadURL, deleteObject, UploadTaskSnapshot } from 'firebase/storage';
 import { PlusIcon, TrashIcon, BookOpenIcon, LightbulbIcon, TrophyIcon, CodeBracketIcon, HeartIcon } from '../components/Icons';
 
 interface AcademicJourneyPageProps {
@@ -12,6 +9,15 @@ interface AcademicJourneyPageProps {
     isAdmin: boolean;
     t: Translation;
 }
+
+const convertToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = error => reject(error);
+    });
+};
 
 const AcademicJourneyPage: React.FC<AcademicJourneyPageProps> = ({ data, setData, isAdmin, t }) => {
     const [isUploading, setIsUploading] = useState(false);
@@ -22,7 +28,7 @@ const AcademicJourneyPage: React.FC<AcademicJourneyPageProps> = ({ data, setData
         setData(prevData => ({ ...prevData, [key]: content }));
     };
     
-    const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
 
@@ -32,68 +38,41 @@ const AcademicJourneyPage: React.FC<AcademicJourneyPageProps> = ({ data, setData
             return; 
         };
 
-        const storageRef = ref(storage, `gallery/${file.name}_${Date.now()}`);
-        const uploadTask = uploadBytesResumable(storageRef, file);
-
-        uploadTask.on('state_changed',
-            (snapshot: UploadTaskSnapshot) => {
-                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                setUploadProgress(progress);
-                if (!isUploading) setIsUploading(true);
-            },
-            (error) => {
-                console.error("Error uploading image: ", error);
-                alert("Failed to upload image.");
-                setIsUploading(false);
-                setUploadProgress(0);
-                if(fileInputRef.current) fileInputRef.current.value = "";
-            },
-            () => {
-                getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                    const newImage = {
-                        id: Date.now(),
-                        imageUrl: downloadURL,
-                        caption: caption || "New Image",
-                    };
-
-                    setData(prevData => ({
-                        ...prevData,
-                        gallery: [...(prevData.gallery || []), newImage]
-                    }));
-
-                    setIsUploading(false);
-                    setUploadProgress(0);
-                    if(fileInputRef.current) fileInputRef.current.value = "";
-                });
-            }
-        );
-    };
-
-    const handleImageDelete = async (imageId: number, imageUrl: string) => {
-        if (!window.confirm("Are you sure you want to delete this image?")) return;
+        setIsUploading(true);
+        setUploadProgress(50); 
 
         try {
-            // Delete from Storage
-            const imageRef = ref(storage, imageUrl);
-            await deleteObject(imageRef);
+            const base64String = await convertToBase64(file);
+            const newImage = {
+                id: Date.now(),
+                imageUrl: base64String,
+                caption: caption || "New Image",
+            };
 
-            // Delete from Firestore (by updating state)
             setData(prevData => ({
                 ...prevData,
-                gallery: prevData.gallery.filter(item => item.id !== imageId)
+                gallery: [...(prevData.gallery || []), newImage]
             }));
+            setUploadProgress(100);
+
         } catch (error) {
-            console.error("Error deleting image: ", error);
-            // If it fails because the file does not exist, we can still remove it from the list
-             if ((error as any).code === 'storage/object-not-found') {
-                setData(prevData => ({
-                    ...prevData,
-                    gallery: prevData.gallery.filter(item => item.id !== imageId)
-                }));
-             } else {
-                alert("Failed to delete image.");
-             }
+            console.error("Error uploading image: ", error);
+            alert("Failed to upload image.");
+        } finally {
+            setTimeout(() => {
+                setIsUploading(false);
+                setUploadProgress(0);
+                 if(fileInputRef.current) fileInputRef.current.value = "";
+            }, 500);
         }
+    };
+
+    const handleImageDelete = async (imageId: number) => {
+        if (!window.confirm("Are you sure you want to delete this image?")) return;
+        setData(prevData => ({
+            ...prevData,
+            gallery: prevData.gallery.filter(item => item.id !== imageId)
+        }));
     };
 
     const journeyItems = [
@@ -107,16 +86,16 @@ const AcademicJourneyPage: React.FC<AcademicJourneyPageProps> = ({ data, setData
     return (
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
             <header className="text-center mb-16">
-                <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white">{t.journey.title}</h1>
-                <p className="text-xl text-gray-600 dark:text-gray-400 mt-2">{data.studentInfo.semester}</p>
+                <h1 className="text-4xl md:text-5xl font-extrabold text-zinc-900 dark:text-white">{t.journey.title}</h1>
+                <p className="text-xl text-zinc-600 dark:text-neutral-400 mt-2">{data.studentInfo.semester}</p>
             </header>
 
             <div className="max-w-4xl mx-auto">
-                 <div className="relative ltr:border-l-4 rtl:border-r-4 border-amber-200 dark:border-amber-900 space-y-16">
+                 <div className="relative ltr:border-l-4 rtl:border-r-4 border-orange-200 dark:border-zinc-700 space-y-16">
                     {journeyItems.map((item) => (
                         <div key={item.key} className="relative ltr:pl-12 rtl:pr-12">
-                            <div className="absolute ltr:-left-7 rtl:-right-7 top-0 flex items-center justify-center w-14 h-14 bg-white dark:bg-gray-800 rounded-full ring-4 ring-amber-500">
-                                <item.icon className="w-7 h-7 text-amber-600 dark:text-amber-400" />
+                            <div className="absolute ltr:-left-7 rtl:-right-7 top-0 flex items-center justify-center w-14 h-14 bg-white dark:bg-zinc-800 rounded-full ring-4 ring-orange-500">
+                                <item.icon className="w-7 h-7 text-orange-600 dark:text-orange-400" />
                             </div>
                             <div>
                                 <EditableSection 
@@ -133,9 +112,9 @@ const AcademicJourneyPage: React.FC<AcademicJourneyPageProps> = ({ data, setData
                 </div>
 
                 <div className="mt-20">
-                    <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-200/80 dark:border-gray-700/60">
+                    <div className="bg-white dark:bg-zinc-800 p-6 rounded-xl shadow-lg border border-neutral-200/80 dark:border-zinc-700">
                         <div className="flex justify-center items-center mb-6">
-                            <h3 className="text-3xl font-bold text-gray-900 dark:text-white text-center">{t.journey.gallery}</h3>
+                            <h3 className="text-3xl font-bold text-zinc-900 dark:text-white text-center">{t.journey.gallery}</h3>
                         </div>
                          {isAdmin && (
                             <div className="mb-6 text-center">
@@ -143,20 +122,20 @@ const AcademicJourneyPage: React.FC<AcademicJourneyPageProps> = ({ data, setData
                                 <button
                                     onClick={() => fileInputRef.current?.click()}
                                     disabled={isUploading}
-                                    className="inline-flex items-center gap-2 px-4 py-2 bg-amber-600 dark:bg-amber-700 text-white rounded-lg hover:bg-amber-700 dark:hover:bg-amber-600 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
+                                    className="inline-flex items-center gap-2 px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors disabled:bg-zinc-400 disabled:cursor-not-allowed"
                                 >
                                     <PlusIcon className="w-5 h-5" />
                                     {t.admin.upload}
                                 </button>
                                 {isUploading && (
                                     <div className="mt-4 w-full max-w-xs mx-auto">
-                                        <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+                                        <div className="w-full bg-neutral-200 dark:bg-zinc-700 rounded-full h-2.5">
                                             <div 
-                                                className="bg-amber-600 h-2.5 rounded-full transition-all duration-150" 
+                                                className="bg-orange-600 h-2.5 rounded-full transition-all duration-150" 
                                                 style={{ width: `${uploadProgress}%` }}
                                             ></div>
                                         </div>
-                                        <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">{Math.round(uploadProgress)}%</p>
+                                        <p className="text-sm text-zinc-600 dark:text-neutral-300 mt-1">{Math.round(uploadProgress)}%</p>
                                     </div>
                                 )}
                             </div>
@@ -170,7 +149,7 @@ const AcademicJourneyPage: React.FC<AcademicJourneyPageProps> = ({ data, setData
                                     </div>
                                     {isAdmin && (
                                         <button 
-                                            onClick={() => handleImageDelete(item.id, item.imageUrl)}
+                                            onClick={() => handleImageDelete(item.id)}
                                             className="absolute top-2 right-2 p-2 bg-red-600 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-700"
                                             title={t.admin.deleteItem}
                                         >

@@ -234,8 +234,9 @@ const ar: Translation = {
     journey: { title: "رحلتي الأكاديمية", education: "التعليم", selfReflection: "تأملات حول بدايتي", achievements: "الإنجازات الأكاديمية", projects: "المشاريع والأبحاث", volunteer: "الأعمال التطوعية", gallery: "معرض الأعمال" },
     evaluation: { title: "صفحة تقييم المعلمين", prompt: "قيّم يا معلمي الفاضل", teacherName: "اسم المعلم", placeholder: "اكتب تقييمك هنا...", submit: "إرسال التقييم", success: "تم إرسال تقييمك بنجاح. شكراً لك!", previousEvaluations: "التقييمات السابقة" },
     game: { title: "لعبة معلومات عني", welcome: "اختبر معلوماتك عني في هذه اللعبة!", start: "ابدأ اللعبة", next: "السؤال التالي", submit: "تحقق", correct: "إجابة صحيحة!", incorrect: "إجابة خاطئة، حاول مرة أخرى.", finalScore: "نتيجتك النهائية:", congrats: "تهانينا! لقد أكملت اللعبة بنجاح.", hint: "تلميح عني: شغفي الأكبر هو تعلم البرمجة.", playAgain: "العب مرة أخرى", levels: arGameLevels },
-    theme: { light: "فاتح", dark: "داكن", system: "النظام", select: "اختر المظهر", language: "اللغة", font: "الخط" },
+    theme: { select: "المظهر", light: "فاتح", dark: "داكن", system: "النظام", language: "اللغة", font: "الخط" },
     admin: { edit: "تعديل", save: "حفظ", addItem: "إضافة عنصر", removeItem: "حذف", upload: "رفع صورة جديدة", change: "تغيير", deleteItem: "حذف الصورة" },
+    chatbot: { title: "المساعد الذكي", placeholder: "اسأل أي شيء عن زايد...", close: "إغلاق", initialMessage: "أهلاً بك! أنا مساعدك الذكي. كيف يمكنني مساعدتك اليوم بخصوص ملف زايد؟" },
 };
 
 const en: Translation = {
@@ -249,8 +250,9 @@ const en: Translation = {
     journey: { title: "My Academic Journey", education: "Education", selfReflection: "Reflections on My Start", achievements: "Academic Achievements", projects: "Projects & Research", volunteer: "Volunteer Work", gallery: "Gallery" },
     evaluation: { title: "Teacher Evaluation Page", prompt: "Evaluate, my dear teacher", teacherName: "Teacher's Name", placeholder: "Write your evaluation here...", submit: "Submit Evaluation", success: "Your evaluation has been submitted successfully. Thank you!", previousEvaluations: "Previous Evaluations" },
     game: { title: "Game: Info About Me", welcome: "Test your knowledge about me in this game!", start: "Start Game", next: "Next Question", submit: "Check", correct: "Correct!", incorrect: "Incorrect, try again.", finalScore: "Your final score:", congrats: "Congratulations! You completed the game.", hint: "Hint about me: My biggest passion is learning to code.", playAgain: "Play Again", levels: enGameLevels },
-    theme: { light: "Light", dark: "Dark", system: "System", select: "Select Theme", language: "Language", font: "Font" },
+    theme: { select: "Theme", light: "Light", dark: "Dark", system: "System", language: "Language", font: "Font" },
     admin: { edit: "Edit", save: "Save", addItem: "Add Item", removeItem: "Remove", upload: "Upload New Image", change: "Change", deleteItem: "Delete Image" },
+    chatbot: { title: "AI Assistant", placeholder: "Ask anything about Zayed...", close: "Close", initialMessage: "Hello! I'm your AI assistant. How can I help you today regarding Zayed's portfolio?" },
 };
 
 export const translations: { [key: string]: Translation } = { ar, en };

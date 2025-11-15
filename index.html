@@ -9,8 +9,7 @@
       // Immediately set theme to avoid FOUC
       (function() {
         const theme = localStorage.getItem('theme') || 'system';
-        const systemIsDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        if (theme === 'dark' || (theme === 'system' && systemIsDark)) {
+        if (theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
             document.documentElement.classList.add('dark');
         } else {
             document.documentElement.classList.remove('dark');

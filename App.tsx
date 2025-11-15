@@ -6,9 +6,10 @@ import AcademicJourneyPage from './pages/AcademicJourneyPage';
 import EvaluationPage from './pages/EvaluationPage';
 import GamePage from './pages/GamePage';
 import AdminLogin from './components/AdminLogin';
+import Chatbot from './components/Chatbot';
 import { initialData, initialDataEn, translations } from './data/initialData';
 import { PortfolioData, Language, Translation } from './types';
-import { GraduationCapIcon, LoginIcon, LogoutIcon, MenuIcon, XIcon, SettingsIcon } from './components/Icons';
+import { GraduationCapIcon, LoginIcon, LogoutIcon, MenuIcon, XIcon, SettingsIcon, VoiceChatIcon } from './components/Icons';
 import { db } from './firebase';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import debounce from 'lodash.debounce';
@@ -126,38 +127,34 @@ const App: React.FC = () => {
     
     // --- Theme Management ---
     const [theme, setTheme] = useState<'light' | 'dark' | 'system'>(() => {
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme === 'light' || savedTheme === 'dark' || savedTheme === 'system') {
-            return savedTheme;
-        }
-        return 'system';
+        const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | 'system' | null;
+        return savedTheme || 'system';
     });
-
+    
     useEffect(() => {
-        const root = window.document.documentElement;
-        const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-
         const applyTheme = () => {
-            const activeTheme = localStorage.getItem('theme') || 'system';
-            const systemIsDark = mediaQuery.matches;
+            const isDark = theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+            document.documentElement.classList.toggle('dark', isDark);
+        };
 
-            if (activeTheme === 'dark' || (activeTheme === 'system' && systemIsDark)) {
-                root.classList.add('dark');
-            } else {
-                root.classList.remove('dark');
+        applyTheme();
+        localStorage.setItem('theme', theme);
+
+        const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+        
+        const handleSystemChange = () => {
+            if (theme === 'system') {
+                applyTheme();
             }
         };
 
-        localStorage.setItem('theme', theme);
-        applyTheme();
-
-        mediaQuery.addEventListener('change', applyTheme);
-
+        mediaQuery.addEventListener('change', handleSystemChange);
+        
         return () => {
-            mediaQuery.removeEventListener('change', applyTheme);
+            mediaQuery.removeEventListener('change', handleSystemChange);
         };
     }, [theme]);
-    
+
     const handleThemeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setTheme(e.target.value as 'light' | 'dark' | 'system');
     };
@@ -173,6 +170,7 @@ const App: React.FC = () => {
     
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+    const [isChatOpen, setIsChatOpen] = useState(false);
     const settingsMenuRef = useRef<HTMLDivElement>(null);
 
     const t = cachedUiTranslations[language as keyof typeof cachedUiTranslations] || cachedUiTranslations['en'];
@@ -304,7 +302,8 @@ const App: React.FC = () => {
                                 evaluation: { type: Type.OBJECT, properties: { title: { type: Type.STRING }, prompt: { type: Type.STRING }, teacherName: { type: Type.STRING }, placeholder: { type: Type.STRING }, submit: { type: Type.STRING }, success: { type: Type.STRING }, previousEvaluations: { type: Type.STRING } } },
                                 game: { type: Type.OBJECT, properties: { title: { type: Type.STRING }, welcome: { type: Type.STRING }, start: { type: Type.STRING }, next: { type: Type.STRING }, submit: { type: Type.STRING }, correct: { type: Type.STRING }, incorrect: { type: Type.STRING }, finalScore: { type: Type.STRING }, congrats: { type: Type.STRING }, hint: { type: Type.STRING }, playAgain: { type: Type.STRING }, levels: { type: Type.ARRAY, items: gameLevelSchema } } },
                                 admin: { type: Type.OBJECT, properties: { edit: { type: Type.STRING }, save: { type: Type.STRING }, addItem: { type: Type.STRING }, removeItem: { type: Type.STRING }, upload: { type: Type.STRING }, change: { type: Type.STRING }, deleteItem: { type: Type.STRING } } },
-                                theme: { type: Type.OBJECT, properties: { light: { type: Type.STRING }, dark: { type: Type.STRING }, system: {type: Type.STRING}, select: { type: Type.STRING }, language: { type: Type.STRING }, font: { type: Type.STRING } } },
+                                theme: { type: Type.OBJECT, properties: { select: { type: Type.STRING }, light: { type: Type.STRING }, dark: { type: Type.STRING }, system: { type: Type.STRING }, language: { type: Type.STRING }, font: { type: Type.STRING } } },
+                                chatbot: { type: Type.OBJECT, properties: { title: { type: Type.STRING }, placeholder: { type: Type.STRING }, close: { type: Type.STRING }, initialMessage: { type: Type.STRING } } },
                             }
                         },
                         portfolio: {
@@ -388,69 +387,72 @@ const App: React.FC = () => {
 
     const closeMobileMenu = () => setIsMobileMenuOpen(false);
     
-    const activeLinkClass = "text-amber-600 dark:text-amber-400 font-semibold";
-    const inactiveLinkClass = "text-gray-600 hover:text-amber-600 dark:text-gray-300 dark:hover:text-amber-400";
-    const mobileActiveLinkClass = "bg-amber-100 text-amber-700 dark:bg-amber-900/50 dark:text-amber-400";
-    const mobileInactiveLinkClass = "text-gray-700 hover:bg-amber-50 dark:text-amber-200 dark:hover:bg-gray-800";
+    const activeLinkClass = "text-orange-600 dark:text-orange-400 font-semibold";
+    const inactiveLinkClass = "text-zinc-600 hover:text-orange-600 dark:text-neutral-300 dark:hover:text-orange-400";
+    const mobileActiveLinkClass = "bg-orange-100 text-orange-700 dark:bg-orange-900/50 dark:text-orange-400";
+    const mobileInactiveLinkClass = "text-zinc-700 hover:bg-orange-50 dark:text-orange-200 dark:hover:bg-zinc-800";
 
 
     return (
         <HashRouter>
-            <div className={`min-h-screen bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-200`}>
+            <div className={`min-h-screen bg-neutral-100 text-zinc-900 dark:bg-zinc-900 dark:text-neutral-200`}>
                 {(isLoading || (language !== 'ar' && !cachedPortfolioData[language])) && (
                     <div className="fixed inset-0 bg-black bg-opacity-80 flex flex-col items-center justify-center z-[9999] backdrop-blur-sm">
-                        <div className="w-16 h-16 border-4 border-dashed rounded-full animate-spin border-amber-500"></div>
+                        <div className="w-16 h-16 border-4 border-dashed rounded-full animate-spin border-orange-500"></div>
                         <p className="text-white text-xl mt-4">
                            {language === 'ar' ? 'Loading Data...' : 'Translating...'}
                         </p>
                     </div>
                 )}
-                <header className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm shadow-sm sticky top-0 z-50 border-b border-gray-200 dark:border-gray-800">
+                <header className="bg-neutral-100/80 dark:bg-zinc-900/80 backdrop-blur-sm shadow-sm sticky top-0 z-50 border-b border-neutral-200 dark:border-zinc-800">
                     <nav className="container mx-auto px-4 sm:px-6 lg:px-8">
                         <div className="flex items-center justify-between h-20">
                             <div className="flex items-center">
                                 <div className="flex-shrink-0 flex items-center gap-3">
-                                    <GraduationCapIcon className="h-10 w-10 text-amber-600 dark:text-amber-400" />
-                                    <span className="text-xl font-bold text-gray-900 dark:text-white">{t.appName}</span>
+                                    <GraduationCapIcon className="h-10 w-10 text-orange-600 dark:text-orange-400" />
+                                    <span className="text-xl font-bold text-zinc-900 dark:text-white">{t.appName}</span>
                                 </div>
                                 <div className="hidden md:block">
                                     <div className="ltr:ml-10 rtl:mr-10 flex items-baseline space-x-4 rtl:space-x-reverse">
-                                        <NavLink to="/" className={({ isActive }) => `${isActive ? activeLinkClass : inactiveLinkClass} px-3 py-2 rounded-md text-sm font-medium transition-colors`}>{t.nav.home}</NavLink>
-                                        <NavLink to="/journey" className={({ isActive }) => `${isActive ? activeLinkClass : inactiveLinkClass} px-3 py-2 rounded-md text-sm font-medium transition-colors`}>{t.nav.journey}</NavLink>
-                                        <NavLink to="/evaluation" className={({ isActive }) => `${isActive ? activeLinkClass : inactiveLinkClass} px-3 py-2 rounded-md text-sm font-medium transition-colors`}>{t.nav.evaluation}</NavLink>
-                                        <NavLink to="/game" className={({ isActive }) => `${isActive ? activeLinkClass : inactiveLinkClass} px-3 py-2 rounded-md text-sm font-medium transition-colors`}>{t.nav.game}</NavLink>
+                                        <NavLink to="/" className={({ isActive }) => `${isActive ? activeLinkClass : inactiveLinkClass} px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 transform hover:-translate-y-0.5`}>{t.nav.home}</NavLink>
+                                        <NavLink to="/journey" className={({ isActive }) => `${isActive ? activeLinkClass : inactiveLinkClass} px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 transform hover:-translate-y-0.5`}>{t.nav.journey}</NavLink>
+                                        <NavLink to="/evaluation" className={({ isActive }) => `${isActive ? activeLinkClass : inactiveLinkClass} px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 transform hover:-translate-y-0.5`}>{t.nav.evaluation}</NavLink>
+                                        <NavLink to="/game" className={({ isActive }) => `${isActive ? activeLinkClass : inactiveLinkClass} px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 transform hover:-translate-y-0.5`}>{t.nav.game}</NavLink>
                                     </div>
                                 </div>
                             </div>
                             <div className="flex items-center">
                                  <div className="hidden md:flex items-center space-x-2 rtl:space-x-reverse">
+                                    <button onClick={() => setIsChatOpen(true)} className="p-2 rounded-full text-zinc-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-neutral-200 dark:focus:ring-offset-zinc-700 focus:ring-orange-500 transition-colors" aria-label="Open AI Assistant">
+                                        <VoiceChatIcon className="h-6 w-6" />
+                                    </button>
                                     {isAdmin ? (
-                                        <button onClick={handleLogout} className="p-2 rounded-full text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-200 dark:focus:ring-offset-gray-700 focus:ring-amber-500 transition-colors" aria-label="Logout">
+                                        <button onClick={handleLogout} className="p-2 rounded-full text-zinc-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-neutral-200 dark:focus:ring-offset-zinc-700 focus:ring-orange-500 transition-colors" aria-label="Logout">
                                             <LogoutIcon className="h-6 w-6" />
                                         </button>
                                     ) : (
-                                        <button onClick={() => setShowLogin(true)} className="p-2 rounded-full text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-200 dark:focus:ring-offset-gray-700 focus:ring-amber-500 transition-colors" aria-label="Admin Login">
+                                        <button onClick={() => setShowLogin(true)} className="p-2 rounded-full text-zinc-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-neutral-200 dark:focus:ring-offset-zinc-700 focus:ring-orange-500 transition-colors" aria-label="Admin Login">
                                             <LoginIcon className="h-6 w-6" />
                                         </button>
                                     )}
                                      <div className="relative" ref={settingsMenuRef}>
-                                        <button onClick={() => setIsSettingsOpen(!isSettingsOpen)} className="p-2 rounded-full text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-200 dark:focus:ring-offset-gray-700 focus:ring-amber-500 transition-colors" aria-label="Settings">
+                                        <button onClick={() => setIsSettingsOpen(!isSettingsOpen)} className="p-2 rounded-full text-zinc-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-neutral-200 dark:focus:ring-offset-zinc-700 focus:ring-orange-500 transition-colors" aria-label="Settings">
                                             <SettingsIcon className="h-6 w-6" />
                                         </button>
                                         {isSettingsOpen && (
-                                            <div className="absolute ltr:right-0 rtl:left-0 mt-2 w-64 origin-top-right bg-white dark:bg-gray-800 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50 p-4 border dark:border-gray-700">
+                                            <div className="absolute ltr:right-0 rtl:left-0 mt-2 w-64 origin-top-right bg-white dark:bg-zinc-800 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50 p-4 border dark:border-zinc-700">
                                                 <div className="space-y-4">
                                                     <div>
-                                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t.theme.select}</label>
-                                                        <select onChange={handleThemeChange} value={theme} className="w-full bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white px-2 py-1.5 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 border border-gray-300 dark:border-gray-600">
+                                                        <label className="block text-sm font-medium text-zinc-700 dark:text-neutral-300 mb-1">{t.theme.select}</label>
+                                                        <select onChange={handleThemeChange} value={theme} className="w-full bg-neutral-100 dark:bg-zinc-700 text-zinc-900 dark:text-white px-2 py-1.5 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 border border-neutral-300 dark:border-zinc-600">
                                                             <option value="light">{t.theme.light}</option>
                                                             <option value="dark">{t.theme.dark}</option>
                                                             <option value="system">{t.theme.system}</option>
                                                         </select>
                                                     </div>
                                                     <div>
-                                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t.theme.language}</label>
-                                                        <select onChange={handleLanguageChange} value={language} className="w-full bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white px-2 py-1.5 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 border border-gray-300 dark:border-gray-600">
+                                                        <label className="block text-sm font-medium text-zinc-700 dark:text-neutral-300 mb-1">{t.theme.language}</label>
+                                                        <select onChange={handleLanguageChange} value={language} className="w-full bg-neutral-100 dark:bg-zinc-700 text-zinc-900 dark:text-white px-2 py-1.5 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 border border-neutral-300 dark:border-zinc-600">
                                                             {languages.map(lang => (
                                                                 <option key={lang.code} value={lang.code}>{lang.name}</option>
                                                             ))}
@@ -458,8 +460,8 @@ const App: React.FC = () => {
                                                     </div>
                                                     {language === 'ar' && (
                                                         <div>
-                                                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t.theme.font}</label>
-                                                            <select onChange={handleFontChange} value={font} className="w-full bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white px-2 py-1.5 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 border border-gray-300 dark:border-gray-600">
+                                                            <label className="block text-sm font-medium text-zinc-700 dark:text-neutral-300 mb-1">{t.theme.font}</label>
+                                                            <select onChange={handleFontChange} value={font} className="w-full bg-neutral-100 dark:bg-zinc-700 text-zinc-900 dark:text-white px-2 py-1.5 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 border border-neutral-300 dark:border-zinc-600">
                                                                 {fonts.map(f => <option key={f.name} value={f.css}>{f.name}</option>)}
                                                             </select>
                                                         </div>
@@ -473,7 +475,7 @@ const App: React.FC = () => {
                                      <button
                                         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                                         type="button"
-                                        className="inline-flex items-center justify-center p-2 rounded-md text-gray-600 dark:text-amber-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-amber-500"
+                                        className="inline-flex items-center justify-center p-2 rounded-md text-zinc-600 dark:text-orange-300 hover:text-zinc-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-orange-500"
                                         aria-controls="mobile-menu"
                                         aria-expanded={isMobileMenuOpen}
                                     >
@@ -485,22 +487,22 @@ const App: React.FC = () => {
                         </div>
                     </nav>
 
-                    <div className={`transition-all duration-300 ease-in-out overflow-hidden md:hidden bg-white/95 dark:bg-gray-900/95 ${isMobileMenuOpen ? 'max-h-96' : 'max-h-0'}`} id="mobile-menu">
+                    <div className={`transition-all duration-300 ease-in-out overflow-hidden md:hidden bg-white/95 dark:bg-zinc-900/95 ${isMobileMenuOpen ? 'max-h-96' : 'max-h-0'}`} id="mobile-menu">
                         <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
                             <NavLink to="/" onClick={closeMobileMenu} className={({ isActive }) => `${isActive ? mobileActiveLinkClass : mobileInactiveLinkClass} block px-3 py-2 rounded-md text-base font-medium transition-colors`}>{t.nav.home}</NavLink>
                             <NavLink to="/journey" onClick={closeMobileMenu} className={({ isActive }) => `${isActive ? mobileActiveLinkClass : mobileInactiveLinkClass} block px-3 py-2 rounded-md text-base font-medium transition-colors`}>{t.nav.journey}</NavLink>
                             <NavLink to="/evaluation" onClick={closeMobileMenu} className={({ isActive }) => `${isActive ? mobileActiveLinkClass : mobileInactiveLinkClass} block px-3 py-2 rounded-md text-base font-medium transition-colors`}>{t.nav.evaluation}</NavLink>
                             <NavLink to="/game" onClick={closeMobileMenu} className={({ isActive }) => `${isActive ? mobileActiveLinkClass : mobileInactiveLinkClass} block px-3 py-2 rounded-md text-base font-medium transition-colors`}>{t.nav.game}</NavLink>
                         </div>
-                        <div className="pt-4 pb-3 border-t border-gray-200 dark:border-gray-700">
+                        <div className="pt-4 pb-3 border-t border-neutral-200 dark:border-zinc-700">
                             <div className="px-4 space-y-4">
                                 <div className="grid grid-cols-2 gap-4">
-                                    <select onChange={handleThemeChange} value={theme} title={t.theme.select} className="w-full bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white px-2 py-1.5 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 border border-gray-300 dark:border-gray-600">
+                                    <select onChange={handleThemeChange} value={theme} title={t.theme.select} className="w-full bg-neutral-100 dark:bg-zinc-800 text-zinc-900 dark:text-white px-2 py-1.5 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 border border-neutral-300 dark:border-zinc-600">
                                         <option value="light">{t.theme.light}</option>
                                         <option value="dark">{t.theme.dark}</option>
                                         <option value="system">{t.theme.system}</option>
                                     </select>
-                                    <select onChange={handleLanguageChange} value={language} title={t.theme.language} className="w-full bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white px-2 py-1.5 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 border border-gray-300 dark:border-gray-600">
+                                    <select onChange={handleLanguageChange} value={language} title={t.theme.language} className="w-full bg-neutral-100 dark:bg-zinc-800 text-zinc-900 dark:text-white px-2 py-1.5 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 border border-neutral-300 dark:border-zinc-600">
                                         {languages.map(lang => (
                                             <option key={lang.code} value={lang.code}>{lang.name}</option>
                                         ))}
@@ -508,17 +510,17 @@ const App: React.FC = () => {
                                 </div>
                                 <div className="grid grid-cols-2 gap-4 items-center">
                                     {language === 'ar' ? (
-                                    <select onChange={handleFontChange} value={font} title={t.theme.font} className="w-full bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white px-2 py-1.5 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 border border-gray-300 dark:border-gray-600">
+                                    <select onChange={handleFontChange} value={font} title={t.theme.font} className="w-full bg-neutral-100 dark:bg-zinc-800 text-zinc-900 dark:text-white px-2 py-1.5 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 border border-neutral-300 dark:border-zinc-600">
                                         {fonts.map(f => <option key={f.name} value={f.css}>{f.name}</option>)}
                                     </select>
                                     ) : <div />} 
                                     {isAdmin ? (
-                                        <button onClick={() => { handleLogout(); closeMobileMenu(); }} className="w-full flex justify-center items-center gap-2 p-2 rounded-md text-gray-700 dark:text-amber-200 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700" aria-label="Logout">
+                                        <button onClick={() => { handleLogout(); closeMobileMenu(); }} className="w-full flex justify-center items-center gap-2 p-2 rounded-md text-zinc-700 dark:text-orange-200 bg-neutral-100 dark:bg-zinc-800 hover:bg-neutral-200 dark:hover:bg-zinc-700" aria-label="Logout">
                                             <LogoutIcon className="h-5 w-5" />
                                             <span className="text-sm">Logout</span>
                                         </button>
                                     ) : (
-                                        <button onClick={() => { setShowLogin(true); closeMobileMenu(); }} className="w-full flex justify-center items-center gap-2 p-2 rounded-md text-gray-700 dark:text-amber-200 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700" aria-label="Admin Login">
+                                        <button onClick={() => { setShowLogin(true); closeMobileMenu(); }} className="w-full flex justify-center items-center gap-2 p-2 rounded-md text-zinc-700 dark:text-orange-200 bg-neutral-100 dark:bg-zinc-800 hover:bg-neutral-200 dark:hover:bg-zinc-700" aria-label="Admin Login">
                                             <LoginIcon className="h-5 w-5" />
                                             <span className="text-sm">Login</span>
                                         </button>
@@ -537,11 +539,18 @@ const App: React.FC = () => {
                         <Route path="/game" element={<GamePage t={t} />} />
                     </Routes>
                 </main>
-                <footer className="py-8 mt-12 text-center text-gray-500 dark:text-gray-400 text-sm">
+                <footer className="py-8 mt-12 text-center text-zinc-500 dark:text-neutral-400 text-sm">
                     <p>&copy; {new Date().getFullYear()} {t.footer.rights} {displayData.studentInfo.name}.</p>
                 </footer>
 
                 {showLogin && <AdminLogin onLogin={handleLogin} onClose={() => setShowLogin(false)} t={t} />}
+                
+                <Chatbot 
+                    isOpen={isChatOpen} 
+                    onClose={() => setIsChatOpen(false)} 
+                    t={t} 
+                    portfolioData={displayData} 
+                />
             </div>
         </HashRouter>
     );
