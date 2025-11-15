@@ -225,33 +225,33 @@ const enGameLevels: GameLevel[] = [
 
 const ar: Translation = {
     appName: "انجازات زايد",
-    nav: { home: "الرئيسية", journey: "المسيرة الأكاديمية", evaluation: "تقييم المعلمين", game: "لعبة التحدي" },
+    nav: { home: "الرئيسية", journey: "المسيرة الأكاديمية", evaluation: "تعليقات المعلمين", game: "لعبة التحدي" },
     footer: { rights: "جميع الحقوق محفوظة لـ" },
     login: { title: "دخول المدير", password: "كلمة المرور", enter: "دخول", close: "إغلاق" },
     home: {
         welcome: "مرحباً بك في ملف إنجازاتي", student: "الطالب", aboutMe: "نبذة عني", skills: "المهارات", hobbies: "الهوايات", goals: "الأهداف"
     },
     journey: { title: "رحلتي الأكاديمية", education: "التعليم", selfReflection: "تأملات حول بدايتي", achievements: "الإنجازات الأكاديمية", projects: "المشاريع والأبحاث", volunteer: "الأعمال التطوعية", gallery: "معرض الأعمال", captionPrompt: "أدخل وصفًا للصورة الجديدة:" },
-    evaluation: { title: "صفحة تقييم المعلمين", prompt: "قيّم يا معلمي الفاضل", teacherName: "اسم المعلم", placeholder: "اكتب تقييمك هنا...", submit: "إرسال التقييم", success: "تم إرسال تقييمك بنجاح. شكراً لك!", previousEvaluations: "التقييمات السابقة" },
+    evaluation: { title: "صفحة تعليقات المعلمين", prompt: "أضف تعليقًا يا معلمي الفاضل", teacherName: "اسم المعلم", placeholder: "اكتب تعليقك هنا...", submit: "إرسال التعليق", success: "تم إرسال تعليقك بنجاح. شكراً لك!", previousEvaluations: "التعليقات السابقة" },
     game: { title: "لعبة معلومات عني", welcome: "اختبر معلوماتك عني في هذه اللعبة!", start: "ابدأ اللعبة", next: "السؤال التالي", submit: "تحقق", correct: "إجابة صحيحة!", incorrect: "إجابة خاطئة، حاول مرة أخرى.", finalScore: "نتيجتك النهائية:", congrats: "تهانينا! لقد أكملت اللعبة بنجاح.", hint: "تلميح عني: شغفي الأكبر هو تعلم البرمجة.", playAgain: "العب مرة أخرى", levels: arGameLevels },
     theme: { select: "المظهر", light: "فاتح", dark: "داكن", system: "النظام", language: "اللغة", font: "الخط" },
-    admin: { edit: "تعديل", save: "حفظ", addItem: "إضافة عنصر", removeItem: "حذف", upload: "رفع صورة جديدة", change: "تغيير", deleteItem: "حذف الصورة", uploadError: "فشل رفع الصورة.", deleteConfirm: "هل أنت متأكد من حذف هذه الصورة؟", deleteError: "فشل حذف الصورة.", avatarUploadError: "فشل رفع صورة الملف الشخصي.", imageTooLargeError: "الصورة كبيرة جداً. الرجاء رفع صورة أصغر من 500 كيلوبايت.", imageReadError: "فشل قراءة ملف الصورة.", deleteEvaluation: "حذف التقييم", deleteEvaluationConfirm: "هل أنت متأكد من حذف هذا التقييم؟" },
+    admin: { edit: "تعديل", save: "حفظ", addItem: "إضافة عنصر", removeItem: "حذف", upload: "رفع صورة جديدة", change: "تغيير", deleteItem: "حذف الصورة", uploadError: "فشل رفع الصورة.", deleteConfirm: "هل أنت متأكد من حذف هذه الصورة؟", deleteError: "فشل حذف الصورة.", avatarUploadError: "فشل رفع صورة الملف الشخصي.", imageTooLargeError: "الصورة كبيرة جداً. الرجاء رفع صورة أصغر من 500 كيلوبايت.", imageReadError: "فشل قراءة ملف الصورة.", deleteEvaluation: "حذف التعليق", deleteEvaluationConfirm: "هل أنت متأكد من حذف هذا التعليق؟" },
     chatbot: { title: "المساعد الذكي", placeholder: "اسأل أي شيء عن زايد...", close: "إغلاق", initialMessage: "أهلاً بك! أنا مساعدك الذكي. كيف يمكنني مساعدتك اليوم بخصوص ملف زايد؟", connectionError: "عذراً، أواجه مشكلة في الاتصال الآن." },
 };
 
 const en: Translation = {
     appName: "Zayed's Achievements",
-    nav: { home: "Home", journey: "Academic Journey", evaluation: "Teacher Evaluation", game: "Challenge Game" },
+    nav: { home: "Home", journey: "Academic Journey", evaluation: "Teacher Comments", game: "Challenge Game" },
     footer: { rights: "All rights reserved for" },
     login: { title: "Admin Login", password: "Password", enter: "Login", close: "Close" },
     home: {
         welcome: "Welcome to my Portfolio", student: "Student", aboutMe: "About Me", skills: "Skills", hobbies: "Hobbies", goals: "Goals"
     },
     journey: { title: "My Academic Journey", education: "Education", selfReflection: "Reflections on My Start", achievements: "Academic Achievements", projects: "Projects & Research", volunteer: "Volunteer Work", gallery: "Gallery", captionPrompt: "Enter a caption for the new image:" },
-    evaluation: { title: "Teacher Evaluation Page", prompt: "Evaluate, my dear teacher", teacherName: "Teacher's Name", placeholder: "Write your evaluation here...", submit: "Submit Evaluation", success: "Your evaluation has been submitted successfully. Thank you!", previousEvaluations: "Previous Evaluations" },
+    evaluation: { title: "Teacher Comments Page", prompt: "Add a comment, my dear teacher", teacherName: "Teacher's Name", placeholder: "Write your comment here...", submit: "Submit Comment", success: "Your comment has been submitted successfully. Thank you!", previousEvaluations: "Previous Comments" },
     game: { title: "Game: Info About Me", welcome: "Test your knowledge about me in this game!", start: "Start Game", next: "Next Question", submit: "Check", correct: "Correct!", incorrect: "Incorrect, try again.", finalScore: "Your final score:", congrats: "Congratulations! You completed the game.", hint: "Hint about me: My biggest passion is learning to code.", playAgain: "Play Again", levels: enGameLevels },
     theme: { select: "Theme", light: "Light", dark: "Dark", system: "System", language: "Language", font: "Font" },
-    admin: { edit: "Edit", save: "Save", addItem: "Add Item", removeItem: "Remove", upload: "Upload New Image", change: "Change", deleteItem: "Delete Image", uploadError: "Failed to upload image.", deleteConfirm: "Are you sure you want to delete this image?", deleteError: "Failed to delete image.", avatarUploadError: "Failed to upload avatar image.", imageTooLargeError: "Image is too large. Please upload an image smaller than 500KB.", imageReadError: "Failed to read the image file.", deleteEvaluation: "Delete Evaluation", deleteEvaluationConfirm: "Are you sure you want to delete this evaluation?" },
+    admin: { edit: "Edit", save: "Save", addItem: "Add Item", removeItem: "Remove", upload: "Upload New Image", change: "Change", deleteItem: "Delete Image", uploadError: "Failed to upload image.", deleteConfirm: "Are you sure you want to delete this image?", deleteError: "Failed to delete image.", avatarUploadError: "Failed to upload avatar image.", imageTooLargeError: "Image is too large. Please upload an image smaller than 500KB.", imageReadError: "Failed to read the image file.", deleteEvaluation: "Delete Comment", deleteEvaluationConfirm: "Are you sure you want to delete this comment?" },
     chatbot: { title: "AI Assistant", placeholder: "Ask anything about Zayed...", close: "Close", initialMessage: "Hello! I'm your AI assistant. How can I help you today regarding Zayed's portfolio?", connectionError: "Sorry, I'm having trouble connecting right now." },
 };
 
