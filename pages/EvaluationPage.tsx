@@ -1,15 +1,16 @@
 
 import React, { useState } from 'react';
 import { Translation, PortfolioData } from '../types';
-import { QuoteIcon } from '../components/Icons';
+import { QuoteIcon, TrashIcon } from '../components/Icons';
 
 interface EvaluationPageProps {
     t: Translation;
     data: PortfolioData;
     setData: React.Dispatch<React.SetStateAction<PortfolioData>>;
+    isAdmin: boolean;
 }
 
-const EvaluationPage: React.FC<EvaluationPageProps> = ({ t, data, setData }) => {
+const EvaluationPage: React.FC<EvaluationPageProps> = ({ t, data, setData, isAdmin }) => {
     const [teacherName, setTeacherName] = useState('');
     const [newEvaluation, setNewEvaluation] = useState('');
     const [submitted, setSubmitted] = useState(false);
@@ -28,6 +29,15 @@ const EvaluationPage: React.FC<EvaluationPageProps> = ({ t, data, setData }) => 
         }
     };
 
+    const handleDelete = (indexToDelete: number) => {
+        if (window.confirm(t.admin.deleteEvaluationConfirm || 'Are you sure you want to delete this evaluation?')) {
+            setData(prevData => ({
+                ...prevData,
+                evaluations: prevData.evaluations.filter((_, index) => index !== indexToDelete)
+            }));
+        }
+    };
+
     return (
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
             <div className="max-w-3xl mx-auto text-center">
@@ -43,6 +53,15 @@ const EvaluationPage: React.FC<EvaluationPageProps> = ({ t, data, setData }) => 
                                      <QuoteIcon className="absolute top-5 ltr:left-5 rtl:right-5 w-8 h-8 text-primary/10" />
                                      <p className="text-muted-foreground whitespace-pre-wrap z-10 relative leading-relaxed">{evalItem.text}</p>
                                      <p className="font-semibold text-foreground mt-4 text-left rtl:text-right z-10 relative">— {evalItem.teacher}</p>
+                                      {isAdmin && (
+                                        <button 
+                                            onClick={() => handleDelete(index)}
+                                            className="absolute top-2 ltr:right-2 rtl:left-2 p-2 bg-destructive text-destructive-foreground rounded-full hover:bg-destructive/90"
+                                            title={t.admin.deleteEvaluation}
+                                        >
+                                           <TrashIcon className="w-5 h-5" />
+                                        </button>
+                                    )}
                                  </div>
                              ))}
                          </div>

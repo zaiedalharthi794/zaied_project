@@ -122,6 +122,8 @@ export interface Translation {
         avatarUploadError: string;
         imageTooLargeError: string;
         imageReadError: string;
+        deleteEvaluation: string;
+        deleteEvaluationConfirm: string;
     };
     chatbot: {
         title: string;

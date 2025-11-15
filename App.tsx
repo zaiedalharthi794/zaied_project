@@ -454,7 +454,7 @@ const App: React.FC = () => {
                     <Routes>
                         <Route path="/" element={<HomePage data={displayData} setData={setData} isAdmin={isAdmin} t={t} />} />
                         <Route path="/journey" element={<AcademicJourneyPage data={displayData} setData={setData} isAdmin={isAdmin} t={t} />} />
-                        <Route path="/evaluation" element={<EvaluationPage t={t} data={displayData} setData={setData} />} />
+                        <Route path="/evaluation" element={<EvaluationPage t={t} data={displayData} setData={setData} isAdmin={isAdmin} />} />
                         <Route path="/game" element={<GamePage t={t} />} />
                     </Routes>
                 </main>
