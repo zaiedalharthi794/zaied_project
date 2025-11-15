@@ -121,6 +121,7 @@ export interface Translation {
         placeholder: string;
         close: string;
         initialMessage: string;
+        connectionError: string;
     };
 }
 

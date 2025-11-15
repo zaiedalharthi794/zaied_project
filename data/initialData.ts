@@ -236,7 +236,7 @@ const ar: Translation = {
     game: { title: "لعبة معلومات عني", welcome: "اختبر معلوماتك عني في هذه اللعبة!", start: "ابدأ اللعبة", next: "السؤال التالي", submit: "تحقق", correct: "إجابة صحيحة!", incorrect: "إجابة خاطئة، حاول مرة أخرى.", finalScore: "نتيجتك النهائية:", congrats: "تهانينا! لقد أكملت اللعبة بنجاح.", hint: "تلميح عني: شغفي الأكبر هو تعلم البرمجة.", playAgain: "العب مرة أخرى", levels: arGameLevels },
     theme: { select: "المظهر", light: "فاتح", dark: "داكن", system: "النظام", language: "اللغة", font: "الخط" },
     admin: { edit: "تعديل", save: "حفظ", addItem: "إضافة عنصر", removeItem: "حذف", upload: "رفع صورة جديدة", change: "تغيير", deleteItem: "حذف الصورة" },
-    chatbot: { title: "المساعد الذكي", placeholder: "اسأل أي شيء عن زايد...", close: "إغلاق", initialMessage: "أهلاً بك! أنا مساعدك الذكي. كيف يمكنني مساعدتك اليوم بخصوص ملف زايد؟" },
+    chatbot: { title: "المساعد الذكي", placeholder: "اسأل أي شيء عن زايد...", close: "إغلاق", initialMessage: "أهلاً بك! أنا مساعدك الذكي. كيف يمكنني مساعدتك اليوم بخصوص ملف زايد؟", connectionError: "عذراً، أواجه مشكلة في الاتصال الآن." },
 };
 
 const en: Translation = {
@@ -252,7 +252,7 @@ const en: Translation = {
     game: { title: "Game: Info About Me", welcome: "Test your knowledge about me in this game!", start: "Start Game", next: "Next Question", submit: "Check", correct: "Correct!", incorrect: "Incorrect, try again.", finalScore: "Your final score:", congrats: "Congratulations! You completed the game.", hint: "Hint about me: My biggest passion is learning to code.", playAgain: "Play Again", levels: enGameLevels },
     theme: { select: "Theme", light: "Light", dark: "Dark", system: "System", language: "Language", font: "Font" },
     admin: { edit: "Edit", save: "Save", addItem: "Add Item", removeItem: "Remove", upload: "Upload New Image", change: "Change", deleteItem: "Delete Image" },
-    chatbot: { title: "AI Assistant", placeholder: "Ask anything about Zayed...", close: "Close", initialMessage: "Hello! I'm your AI assistant. How can I help you today regarding Zayed's portfolio?" },
+    chatbot: { title: "AI Assistant", placeholder: "Ask anything about Zayed...", close: "Close", initialMessage: "Hello! I'm your AI assistant. How can I help you today regarding Zayed's portfolio?", connectionError: "Sorry, I'm having trouble connecting right now." },
 };
 
 export const translations: { [key: string]: Translation } = { ar, en };

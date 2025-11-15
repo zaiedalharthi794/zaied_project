@@ -10,12 +10,43 @@ interface ChatbotProps {
     portfolioData: PortfolioData;
 }
 
+const formatPortfolioDataForPrompt = (data: PortfolioData, t: Translation): string => {
+    let prompt = `${t.home.student}: ${data.studentInfo.name}\n`;
+    prompt += `${t.home.aboutMe}: ${data.aboutMe}\n`;
+    prompt += `${t.journey.education}: ${data.education}\n`;
+    prompt += `${t.journey.selfReflection}: ${data.selfReflection}\n\n`;
+
+    prompt += `${t.home.skills}:\n- ${data.skills.join('\n- ')}\n\n`;
+    prompt += `${t.journey.achievements}:\n- ${data.achievements.join('\n- ')}\n\n`;
+    prompt += `${t.journey.projects}:\n- ${data.projects.join('\n- ')}\n\n`;
+    prompt += `${t.journey.volunteer}:\n- ${data.volunteerWork.join('\n- ')}\n\n`;
+    prompt += `${t.home.hobbies}:\n- ${data.hobbies.join('\n- ')}\n\n`;
+    prompt += `${t.home.goals}:\n- ${data.goals.join('\n- ')}\n\n`;
+    
+    if (data.gallery && data.gallery.length > 0) {
+        prompt += `${t.journey.gallery} captions:\n- ${data.gallery.map(item => item.caption).join('\n- ')}\n\n`;
+    }
+
+    if (data.evaluations && data.evaluations.length > 0) {
+        prompt += `${t.evaluation.previousEvaluations}:\n${data.evaluations.map(e => `- ${e.teacher}: "${e.text}"`).join('\n')}\n\n`;
+    }
+
+    return prompt;
+};
+
+
 const Chatbot: React.FC<ChatbotProps> = ({ isOpen, onClose, t, portfolioData }) => {
     const [messages, setMessages] = useState<ChatMessage[]>([]);
     const [inputValue, setInputValue] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const chatRef = useRef<Chat | null>(null);
     const messagesEndRef = useRef<HTMLDivElement>(null);
+
+    // When portfolio data changes (e.g., language switch),
+    // reset the chat session to force re-initialization with the new system instruction.
+    useEffect(() => {
+        chatRef.current = null;
+    }, [portfolioData]);
 
     // Set initial message when the component mounts or translations change
     useEffect(() => {
@@ -42,13 +73,19 @@ const Chatbot: React.FC<ChatbotProps> = ({ isOpen, onClose, t, portfolioData }) 
         try {
             if (!chatRef.current) {
                 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+                const formattedData = formatPortfolioDataForPrompt(portfolioData, t);
                 const systemInstruction = `You are a friendly, helpful AI assistant for a student's portfolio website. 
                 Your name is 'Enjaz Assistant'.
                 The student's name is Zayed.
                 Answer all questions based *only* on the provided portfolio data. 
                 Do not invent information. If the answer is not in the data, say you don't have that information.
                 Keep your answers concise and to the point.
-                Here is the student's portfolio data in JSON format: ${JSON.stringify(portfolioData)}`;
+                The user is asking questions in the same language as the portfolio data. Please respond in that language.
+                Here is the student's portfolio data:
+                ---
+                ${formattedData}
+                ---
+                `;
 
                 chatRef.current = ai.chats.create({
                     model: 'gemini-2.5-flash',
@@ -64,7 +101,8 @@ const Chatbot: React.FC<ChatbotProps> = ({ isOpen, onClose, t, portfolioData }) 
 
         } catch (error) {
             console.error("Gemini API error:", error);
-            const errorMessage: ChatMessage = { role: 'model', text: "Sorry, I'm having trouble connecting right now." };
+            const errorText = t.chatbot.connectionError || "Sorry, I'm having trouble connecting right now.";
+            const errorMessage: ChatMessage = { role: 'model', text: errorText };
             setMessages(prev => [...prev, errorMessage]);
         } finally {
             setIsLoading(false);
