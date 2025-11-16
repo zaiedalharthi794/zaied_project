@@ -12,7 +12,7 @@ export const initialData: PortfolioData = {
         avatarUrl: "https://i.ibb.co/6r1zX1g/image.png",
     },
     aboutMe: "طالب شغوف وطموح في مدرسة الأندلس الأهلية، أسعى لتعلم كل ما هو جديد ومفيد كي لا أصبح جاهلاً، وأطمح لتحسين مهاراتي في البرمجة والذكاء الاصطناعي.",
-    education: "أدرس حالياً في الصف الأول متوسط.",
+    education: "بدأت رحلتي التعليمية ببناء أساس قوي في المرحلة الابتدائية، والآن كطالب في الصف الأول المتوسط بمدرسة الأندلس الأهلية، أعيش مرحلة جديدة مليئة بالتحديات والفرص. أجد في بيئة المدرسة المحفزة والدعم المستمر من المعلمين دافعًا قويًا للإبداع والتفوق. أولي اهتمامًا خاصًا بمواد العلوم والرياضيات واللغة الإنجليزية، حيث أرى فيها مفاتيح المستقبل، كما أنني شغوف بتعلم البرمجة وأساسيات الذكاء الاصطناعي التي أخصص لها وقتًا خارج النطاق الدراسي. أحرص على المشاركة الفعالة في الأنشطة المدرسية والمشاريع الجماعية، لأنني أؤمن بأن التعليم الحقيقي يتجاوز جدران الفصل الدراسي ليشمل بناء الشخصية وتنمية مهارات التواصل والقيادة.",
     selfReflection: "أرى أن بدايتي في المرحلة المتوسطة كانت قوية ومليئة بالشغف. تعلمت الكثير من المهارات الجديدة وأنا متحمس لمواصلة التطور والتعلم في المستقبل.",
     achievements: [
         "المركز الأول في مسابقة الطباعة السريعة في الصف السادس.",
@@ -68,7 +68,7 @@ export const initialDataEn: PortfolioData = {
         avatarUrl: "https://i.ibb.co/6r1zX1g/image.png",
     },
     aboutMe: "A passionate and ambitious student at Al-Andalus National School, I seek to learn everything new and useful so as not to become ignorant, and I aspire to improve my skills in programming and artificial intelligence.",
-    education: "Currently studying in the first intermediate grade.",
+    education: "My educational journey began with building a strong foundation in elementary school, and now, as a first-intermediate-grade student at Al-Andalus National School, I am embracing a new stage filled with challenges and opportunities. The stimulating school environment and the continuous support from my teachers provide a strong motivation for creativity and excellence. I have a keen interest in subjects like Science, Mathematics, and English, viewing them as keys to the future. I am also passionate about learning programming and the fundamentals of artificial intelligence, dedicating time to them outside my formal studies. I make sure to actively participate in school activities and group projects, as I believe that true education extends beyond the classroom to build character and develop communication and leadership skills.",
     selfReflection: "I see my start in the intermediate stage as strong and full of passion. I have learned many new skills and I am excited to continue developing and learning in the future.",
     achievements: [
         "First place in the fast typing competition in sixth grade.",
@@ -346,7 +346,7 @@ const enChallengeQuestions: ChallengeQuestion[] = [
 
 const ar: Translation = {
     appName: "انجازات زايد",
-    nav: { home: "الرئيسية", journey: "المسيرة الأكاديمية", evaluation: "تعليقات المعلمين", game: "لعبة التحدي" },
+    nav: { home: "الرئيسية", journey: "المسيرة الأكاديمية", evaluation: "تعليقات المعلمين", game: "شبكة الألعاب" },
     footer: { rights: "جميع الحقوق محفوظة لـ" },
     login: { title: "دخول المدير", password: "كلمة المرور", enter: "دخول", close: "إغلاق" },
     home: {
@@ -450,7 +450,7 @@ const ar: Translation = {
 
 const en: Translation = {
     appName: "Zayed's Achievements",
-    nav: { home: "Home", journey: "Academic Journey", evaluation: "Teacher Comments", game: "Challenge Game" },
+    nav: { home: "Home", journey: "Academic Journey", evaluation: "Teacher Comments", game: "Game Arcade" },
     footer: { rights: "All rights reserved for" },
     login: { title: "Admin Login", password: "Password", enter: "Login", close: "Close" },
     home: {
