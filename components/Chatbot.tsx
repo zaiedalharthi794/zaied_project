@@ -50,7 +50,7 @@ const Chatbot: React.FC<ChatbotProps> = ({ isOpen, onClose, t, portfolioData }) 
                 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
                 const systemInstruction = `You are a friendly, helpful AI assistant for a student's portfolio website. 
                 Your name is 'Enjaz Assistant'.
-                The student's name is Zayed.
+                The student's name is Zaied.
                 Answer all questions based *only* on the provided portfolio data. 
                 Do not invent information. If the answer is not in the data, say you don't have that information.
                 Keep your answers concise and to the point.

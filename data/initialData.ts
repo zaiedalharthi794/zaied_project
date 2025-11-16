@@ -51,16 +51,16 @@ export const initialData: PortfolioData = {
     ],
     evaluations: [],
     gallery: [
-        { id: 1, imageUrl: 'https://picsum.photos/seed/project1/600/400', caption: 'مجسم عن المجموعة الشمسية' },
-        { id: 2, imageUrl: 'https://picsum.photos/seed/award1/600/400', caption: 'صورة من مسابقة الطباعة' },
-        { id: 3, imageUrl: 'https://picsum.photos/seed/volunteer1/600/400', caption: 'أثناء العمل التطوعي' },
-        { id: 4, imageUrl: 'https://picsum.photos/seed/project2/600/400', caption: 'عرض تقديمي عن الملك فهد' },
+        { id: 1, imageUrl: 'https://i.ibb.co/yY1kH9Q/solar-system-project.jpg', caption: 'مجسم عن المجموعة الشمسية' },
+        { id: 2, imageUrl: 'https://i.ibb.co/W2z0Wf8/typing-competition.jpg', caption: 'صورة من مسابقة الطباعة' },
+        { id: 3, imageUrl: 'https://i.ibb.co/VvZcGF2/volunteer-food.jpg', caption: 'أثناء العمل التطوعي' },
+        { id: 4, imageUrl: 'https://i.ibb.co/hK5Xz82/king-fahd-presentation.jpg', caption: 'عرض تقديمي عن الملك فهد' },
     ]
 };
 
 export const initialDataEn: PortfolioData = {
     studentInfo: {
-        name: "Zayed Mohammed Al-Harthi",
+        name: "Zaied Mohammed AlHarthi",
         grade: "First Intermediate Grade",
         school: "Al-Andalus National School",
         email: "zaied.alharthi794@gmail.com",
@@ -107,10 +107,10 @@ export const initialDataEn: PortfolioData = {
     ],
     evaluations: [],
     gallery: [
-        { id: 1, imageUrl: 'https://picsum.photos/seed/project1/600/400', caption: 'Model of the Solar System' },
-        { id: 2, imageUrl: 'https://picsum.photos/seed/award1/600/400', caption: 'Photo from the typing competition' },
-        { id: 3, imageUrl: 'https://picsum.photos/seed/volunteer1/600/400', caption: 'During volunteer work' },
-        { id: 4, imageUrl: 'https://picsum.photos/seed/project2/600/400', caption: 'Presentation about King Fahd' },
+        { id: 1, imageUrl: 'https://i.ibb.co/yY1kH9Q/solar-system-project.jpg', caption: 'Model of the Solar System' },
+        { id: 2, imageUrl: 'https://i.ibb.co/W2z0Wf8/typing-competition.jpg', caption: 'Photo from the typing competition' },
+        { id: 3, imageUrl: 'https://i.ibb.co/VvZcGF2/volunteer-food.jpg', caption: 'During volunteer work' },
+        { id: 4, imageUrl: 'https://i.ibb.co/hK5Xz82/king-fahd-presentation.jpg', caption: 'Presentation about King Fahd' },
     ]
 };
 
@@ -449,7 +449,7 @@ const ar: Translation = {
 };
 
 const en: Translation = {
-    appName: "Zayed's Achievements",
+    appName: "Zaied's Achievements",
     nav: { home: "Home", journey: "Academic Journey", evaluation: "Teacher Comments", game: "Game Arcade" },
     footer: { rights: "All rights reserved for" },
     login: { title: "Admin Login", password: "Password", enter: "Login", close: "Close" },
@@ -472,9 +472,9 @@ const en: Translation = {
         playAgain: "Play Again",
         levels: enGameLevels,
         quizTitle: "Challenge Quiz",
-        quizDescription: "Test your knowledge about Zayed in this fun quiz.",
+        quizDescription: "Test your knowledge about Zaied in this fun quiz.",
         memoryTitle: "Memory Game",
-        memoryDescription: "Match cards representing Zayed's hobbies and skills.",
+        memoryDescription: "Match cards representing Zaied's hobbies and skills.",
         iconGameTitle: "Icon Match Game",
         iconGameDescription: "Match the icon to the correct project or achievement.",
         iconGameQuestions: enIconGameQuestions,
@@ -549,7 +549,7 @@ const en: Translation = {
     },
     theme: { select: "Theme", light: "Light", dark: "Dark", system: "System", language: "Language", font: "Font" },
     admin: { edit: "Edit", save: "Save", addItem: "Add Item", removeItem: "Remove", upload: "Upload New Image", change: "Change", deleteItem: "Delete Image", uploadError: "Failed to upload image.", deleteConfirm: "Are you sure you want to delete this image?", deleteError: "Failed to delete image.", avatarUploadError: "Failed to upload avatar image.", imageTooLargeError: "Image is too large. Please upload an image smaller than 500KB.", imageReadError: "Failed to read the image file.", deleteEvaluation: "Delete Comment", deleteEvaluationConfirm: "Are you sure you want to delete this comment?" },
-    chatbot: { title: "AI Assistant", placeholder: "Ask anything about Zayed...", close: "Close", initialMessage: "Hello! I'm your AI assistant. How can I help you today regarding Zayed's portfolio?", connectionError: "Sorry, I'm having trouble connecting right now." },
+    chatbot: { title: "AI Assistant", placeholder: "Ask anything about Zaied...", close: "Close", initialMessage: "Hello! I'm your AI assistant. How can I help you today regarding Zaied's portfolio?", connectionError: "Sorry, I'm having trouble connecting right now." },
 };
 
 export const translations: { [key: string]: Translation } = { ar, en };
