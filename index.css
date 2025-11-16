@@ -8,51 +8,67 @@
     --border-radius: 0.75rem;
   }
 
-  /* ----------------- DEFAULT (ORANGE) THEME ----------------- */
+  /* ----------------- DEFAULT (WHITE/RED) THEME ----------------- */
   [data-theme="default"] {
-    /* Light Mode */
-    --background: 240 10% 99%; /* neutral-50 */
-    --foreground: 240 10% 3.9%; /* zinc-950 */
-    --card: 0 0% 100%; /* white */
-    --card-foreground: 240 10% 3.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 3.9%;
-    --primary: 25 95% 49%; /* orange-600 */
-    --primary-foreground: 60 9.1% 97.8%; /* zinc-50 */
-    --secondary: 240 4.8% 95.9%; /* neutral-100 */
-    --secondary-foreground: 240 5.9% 10%; /* zinc-900 */
-    --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 46.1%; /* zinc-500 */
-    --accent: 240 4.8% 95.9%;
-    --accent-foreground: 240 5.9% 10%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 60 9.1% 97.8%;
-    --border: 240 5.9% 90%; /* neutral-200 */
-    --input: 240 5.9% 90%;
-    --ring: 25 95% 49%; /* orange-600 */
+    /* Light Mode (White base, Maroon accents) */
+    --background: 0 0% 100%; /* White */
+    --foreground: 0 0% 3.9%; /* Near Black */
+    
+    --card: 0 0% 100%; /* White */
+    --card-foreground: 0 0% 3.9%; /* Near Black */
+    
+    --popover: 0 0% 100%; /* White */
+    --popover-foreground: 0 0% 3.9%; /* Near Black */
+    
+    --primary: 0 70% 40%; /* Maroon Red */
+    --primary-foreground: 0 0% 98%; /* Off-white */
+    
+    --secondary: 0 0% 96.1%; /* Light Gray */
+    --secondary-foreground: 0 0% 9%; /* Dark Gray */
+    
+    --muted: 0 0% 96.1%; /* Light Gray */
+    --muted-foreground: 0 0% 45.1%; /* Medium Gray */
+    
+    --accent: 0 0% 96.1%; /* Light Gray for hover backgrounds */
+    --accent-foreground: 0 0% 9%; /* Dark Gray */
+    
+    --destructive: 0 84.2% 60.2%; /* Default Destructive Red */
+    --destructive-foreground: 0 0% 98%; /* Off-white */
+    
+    --border: 0 0% 89.8%; /* Light Gray Border */
+    --input: 0 0% 89.8%; /* Light Gray Input */
+    --ring: 0 70% 40%; /* Maroon Red for focus ring */
   }
 
   [data-theme="default"].dark {
-    /* Dark Mode */
-    --background: 240 10% 3.9%; /* zinc-950 */
-    --foreground: 0 0% 98%; /* neutral-50 */
-    --card: 240 10% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 240 10% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 25 95% 53%; /* orange-500 */
-    --primary-foreground: 60 9.1% 97.8%; /* zinc-50 */
-    --secondary: 240 3.7% 15.9%; /* zinc-800 */
-    --secondary-foreground: 0 0% 98%;
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%; /* zinc-400 */
-    --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 25 95% 53%; /* orange-500 */
+    /* Dark Mode (Dark base, Maroon accents) */
+    --background: 0 0% 3.9%; /* Near Black */
+    --foreground: 0 0% 98%; /* Off-white */
+    
+    --card: 0 0% 3.9%; /* Near Black */
+    --card-foreground: 0 0% 98%; /* Off-white */
+    
+    --popover: 0 0% 3.9%; /* Near Black */
+    --popover-foreground: 0 0% 98%; /* Off-white */
+    
+    --primary: 0 62.8% 50.6%; /* Brighter Red */
+    --primary-foreground: 0 0% 98%; /* Off-white */
+    
+    --secondary: 0 0% 14.9%; /* Dark Gray */
+    --secondary-foreground: 0 0% 98%; /* Off-white */
+    
+    --muted: 0 0% 14.9%; /* Dark Gray */
+    --muted-foreground: 0 0% 63.9%; /* Medium Gray */
+    
+    --accent: 0 0% 14.9%; /* Dark Gray for hover backgrounds */
+    --accent-foreground: 0 0% 98%; /* Off-white */
+    
+    --destructive: 0 62.8% 50.6%; /* Default Destructive Red */
+    --destructive-foreground: 0 0% 98%; /* Off-white */
+    
+    --border: 0 0% 14.9%; /* Dark Gray Border */
+    --input: 0 0% 14.9%; /* Dark Gray Input */
+    --ring: 0 62.8% 50.6%; /* Brighter Red for focus ring */
   }
 }
 

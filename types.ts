@@ -49,6 +49,13 @@ export interface IconGameQuestion {
     options: string[];
 }
 
+export interface ChallengeQuestion {
+    question: string;
+    options: string[];
+    answer: string;
+    explanation: string;
+}
+
 
 export interface Translation {
     appName: string;
@@ -116,6 +123,74 @@ export interface Translation {
         iconGameDescription: string;
         iconGameQuestions: IconGameQuestion[];
         backToGames: string;
+        // New keys for Website Builder Game
+        websiteBuilderTitle: string;
+        websiteBuilderDescription: string;
+        websiteBuilderSteps: {
+            step1_name: {
+                title: string;
+                prompt: string;
+                placeholder: string;
+            };
+            step2_color: {
+                title: string;
+                prompt: string;
+            };
+            step3_layout: {
+                title: string;
+                prompt: string;
+                options: {
+                    default: string;
+                    sidebar: string;
+                    grid: string;
+                };
+            };
+            step4_content: {
+                title: string;
+                prompt: string;
+                welcomePlaceholder: string;
+                aboutPlaceholder: string;
+            };
+            step5_font: {
+                title: string;
+                prompt: string;
+                options: {
+                    sans: string;
+                    serif: string;
+                    mono: string;
+                };
+            };
+            step6_feature: {
+                title: string;
+                prompt: string;
+                options: {
+                    gallery: string;
+                    blog: string;
+                    contact: string;
+                };
+            };
+            finish: {
+                title: string;
+                congrats: string;
+                prompt: string;
+                startChallenge: string;
+            };
+            preview: string;
+            progress: string;
+        };
+        websiteBuilderChallenge: {
+            title: string;
+            subtitle: string;
+            questionLabel: string;
+            checkAnswer: string;
+            nextQuestion: string;
+            viewResults: string;
+            correctAnswer: string;
+            wrongAnswer: string;
+            finalScore: string;
+            playBuilderAgain: string;
+            questions: ChallengeQuestion[];
+        };
     };
     theme: {
         select: string;

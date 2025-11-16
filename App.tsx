@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback } from 'react';
 import { HashRouter, Routes, Route, NavLink } from 'react-router-dom';
 import { GoogleGenAI, Type } from "@google/genai";
@@ -149,7 +150,7 @@ const App: React.FC = () => {
     }, [font, language]);
 
     const handleLogin = (password: string) => {
-        if (password === 'zayed2030') { 
+        if (password === 'zaied99') { 
             setIsAdmin(true);
             setShowLogin(false);
         } else {

@@ -1,11 +1,12 @@
 
 
 import React, { useState } from 'react';
-import { Translation } from '../types';
+import { Translation } from '../../types';
 import QuizGame from '../components/games/QuizGame';
 import MemoryGame from '../components/games/MemoryGame';
 import IconMatchGame from '../components/games/IconMatchGame';
-import { ArrowLeftIcon, QuizIcon, MemoryChipIcon, CameraIcon } from '../components/Icons';
+import WebsiteBuilderGame from '../components/games/WebsiteBuilderGame';
+import { ArrowLeftIcon, QuizIcon, MemoryChipIcon, CameraIcon, GlobeAltIcon } from '../components/Icons';
 
 interface GamePageProps {
     t: Translation;
@@ -32,6 +33,13 @@ const games = [
         descriptionKey: 'iconGameDescription',
         icon: CameraIcon,
         component: IconMatchGame,
+    },
+    {
+        id: 'website-builder',
+        titleKey: 'websiteBuilderTitle',
+        descriptionKey: 'websiteBuilderDescription',
+        icon: GlobeAltIcon,
+        component: WebsiteBuilderGame,
     }
 ];
 

@@ -20,7 +20,6 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onLogin, onClose, t }) => {
         <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 transition-opacity" onClick={onClose}>
             <div className="bg-card text-card-foreground rounded-lg shadow-xl p-8 w-full max-w-sm border border-primary/50" onClick={e => e.stopPropagation()}>
                 <h2 className="text-2xl font-bold text-foreground mb-6 text-center">{t.login.title}</h2>
-                <p className="text-center text-sm text-muted-foreground mb-4"></p>
                 <form onSubmit={handleSubmit}>
                     <div className="mb-4">
                         <label htmlFor="password" className="block text-sm font-bold mb-2">{t.login.password}</label>
