@@ -100,7 +100,7 @@ const HomePage: React.FC<HomePageProps> = ({ data, setData, isAdmin, t }) => {
                 </div>
                 {isAdmin && <input type="file" ref={fileInputRef} onChange={handleAvatarChange} accept="image/*" className="hidden" />}
                 <p className="text-xl text-muted-foreground mt-6">{t.home.welcome}</p>
-                <h1 className="text-4xl md:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-primary to-amber-500 py-2">
+                <h1 className="text-4xl md:text-6xl font-extrabold text-primary py-2">
                     {data.studentInfo.name}
                 </h1>
                 <div className="mt-2 text-muted-foreground flex justify-center items-center gap-4 flex-wrap">
