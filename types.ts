@@ -42,6 +42,14 @@ export interface GameLevel {
     questions: GameQuestion[];
 }
 
+export interface IconGameQuestion {
+    iconName: string;
+    questionText: string;
+    correctAnswer: string;
+    options: string[];
+}
+
+
 export interface Translation {
     appName: string;
     nav: {
@@ -99,6 +107,15 @@ export interface Translation {
         hint: string;
         playAgain: string;
         levels: GameLevel[];
+        // New keys for Game Hub
+        quizTitle: string;
+        quizDescription: string;
+        memoryTitle: string;
+        memoryDescription: string;
+        iconGameTitle: string;
+        iconGameDescription: string;
+        iconGameQuestions: IconGameQuestion[];
+        backToGames: string;
     };
     theme: {
         select: string;

@@ -138,3 +138,66 @@ export const VoiceChatIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) =>
         <path strokeLinecap="round" strokeLinejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 016 0v8.25a3 3 0 01-3 3z" />
     </svg>
 );
+
+export const ArrowLeftIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" {...props}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+    </svg>
+);
+
+export const QuizIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+        <circle cx="12" cy="12" r="10" />
+        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+        <line x1="12" y1="17" x2="12.01" y2="17" />
+    </svg>
+);
+
+export const MemoryChipIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+        <path d="M2 13h2M4 15V9M2 9h2M13 2v2M9 4h6M22 13h-2M20 9v6M22 9h-2M15 22v-2M9 20h6M9 13H5V9h4v4Z"/><path d="M19 15h-4v-6h4v6Z"/>
+    </svg>
+);
+
+export const CameraIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+        <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/>
+        <circle cx="12" cy="13" r="3"/>
+    </svg>
+);
+
+export const FootballIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+        <circle cx="12" cy="12" r="10" />
+        <path d="m16.32 8.61 1.11-2.95" /><path d="m12 2 4.33 6.61" />
+        <path d="M7.68 8.61 6.57 5.66" /><path d="m22 12-6.61-4.33" />
+        <path d="M17.66 16.5 20.6 17.6" /><path d="m12 22-4.33-6.61" />
+        <path d="M6.34 16.5 3.4 17.6" /><path d="m2 12 6.61 4.33" />
+        <path d="m8.61 7.68-2.95-1.11" /><path d="m15.39 7.68 2.95-1.11" />
+        <path d="m8.61 16.32 5.66 17.43" /><path d="M15.39 16.32 18.34 17.43" />
+    </svg>
+);
+
+export const SwimmerIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+        <path d="M16 9l-4-4-4 4" /><circle cx="12" cy="5" r="1" />
+        <path d="m10 13-1.5 1.5a2.1 2.1 0 0 0 3 3L13 16" />
+        <path d="m16 10-1.2 1.2a2.1 2.1 0 0 1-3 3L10 16" />
+        <path d="M8 19.5c-2-1-2-4-2-6" /><path d="M2 13.5c0 2 1 5 3.5 6.5" />
+        <path d="M16 19.5c2-1 2-4 2-6" /><path d="M22 13.5c0 2-1 5-3.5 6.5" />
+    </svg>
+);
+
+export const ChessIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+        <path d="M18 8a2 2 0 0 0-2-2h-8a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2Z" />
+        <path d="M10 8V6" /><path d="M14 8V6" /><path d="M10 18v2" /><path d="M14 18v2" />
+        <path d="M8 10H6" /><path d="M8 14H6" /><path d="M18 10h-2" /><path d="M18 14h-2" />
+    </svg>
+);
+
+export const MountainIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+        <path d="m8 3 4 8 5-5 5 15H2L8 3z" />
+    </svg>
+);

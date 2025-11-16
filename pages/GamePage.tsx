@@ -1,170 +1,89 @@
 
-import React, { useState, useMemo } from 'react';
-import { Translation, GameLevel } from '../types';
 
-const GamePage: React.FC<{t: Translation}> = ({ t }) => {
-    const [gameState, setGameState] = useState<'start' | 'playing' | 'level-cleared' | 'end'>('start');
-    const [currentLevelIndex, setCurrentLevelIndex] = useState(0);
-    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-    const [score, setScore] = useState(0);
-    const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
-    const [isAnswered, setIsAnswered] = useState(false);
+import React, { useState } from 'react';
+import { Translation } from '../types';
+import QuizGame from '../components/games/QuizGame';
+import MemoryGame from '../components/games/MemoryGame';
+import IconMatchGame from '../components/games/IconMatchGame';
+import { ArrowLeftIcon, QuizIcon, MemoryChipIcon, CameraIcon } from '../components/Icons';
 
-    const levels: GameLevel[] = t.game.levels || [];
-    
-    // This check prevents crashing if translations are not loaded yet
-    if (!levels.length) {
-        return (
-             <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
-                <div className="max-w-3xl mx-auto bg-card text-card-foreground p-8 rounded-xl shadow-2xl border border-border min-h-[450px] flex flex-col justify-center items-center">
-                   <p className="text-xl text-muted-foreground">Loading Game...</p>
-                </div>
-            </div>
-        )
+interface GamePageProps {
+    t: Translation;
+}
+
+const games = [
+    {
+        id: 'quiz',
+        titleKey: 'quizTitle',
+        descriptionKey: 'quizDescription',
+        icon: QuizIcon,
+        component: QuizGame,
+    },
+    {
+        id: 'memory',
+        titleKey: 'memoryTitle',
+        descriptionKey: 'memoryDescription',
+        icon: MemoryChipIcon,
+        component: MemoryGame,
+    },
+    {
+        id: 'icon-match',
+        titleKey: 'iconGameTitle',
+        descriptionKey: 'iconGameDescription',
+        icon: CameraIcon,
+        component: IconMatchGame,
     }
+];
 
-    const handleStartGame = () => {
-        setGameState('playing');
-        setCurrentLevelIndex(0);
-        setCurrentQuestionIndex(0);
-        setScore(0);
-        setSelectedAnswer(null);
-        setIsAnswered(false);
+const GamePage: React.FC<GamePageProps> = ({ t }) => {
+    const [activeGame, setActiveGame] = useState<string | null>(null);
+
+    const handleGameSelect = (gameId: string) => {
+        setActiveGame(gameId);
     };
 
-    const handleAnswerSelect = (answer: string) => {
-        if (!isAnswered) {
-            setSelectedAnswer(answer);
-        }
+    const handleBack = () => {
+        setActiveGame(null);
     };
 
-    const handleSubmitAnswer = () => {
-        if (selectedAnswer === null) return;
-        setIsAnswered(true);
-        if (selectedAnswer === levels[currentLevelIndex].questions[currentQuestionIndex].answer) {
-            setScore(score + 1);
-        }
-    };
-
-    const handleNext = () => {
-        const isLastQuestionInLevel = currentQuestionIndex === levels[currentLevelIndex].questions.length - 1;
-
-        if (isLastQuestionInLevel) {
-            setGameState('level-cleared');
-        } else {
-            setCurrentQuestionIndex(currentQuestionIndex + 1);
-            setSelectedAnswer(null);
-            setIsAnswered(false);
-        }
-    };
-
-    const handleNextLevel = () => {
-        const isLastLevel = currentLevelIndex === levels.length - 1;
-
-        if (isLastLevel) {
-            setGameState('end');
-        } else {
-            setCurrentLevelIndex(currentLevelIndex + 1);
-            setCurrentQuestionIndex(0);
-            setSelectedAnswer(null);
-            setIsAnswered(false);
-            setGameState('playing');
-        }
-    };
-    
-    const currentLevel = levels[currentLevelIndex];
-    const currentQuestion = currentLevel.questions[currentQuestionIndex];
-    const totalQuestions = useMemo(() => levels.reduce((acc, level) => acc + level.questions.length, 0), [levels]);
-
-
-    const renderContent = () => {
-        switch (gameState) {
-            case 'start':
-                return (
-                    <div className="text-center">
-                        <h2 className="text-3xl font-bold mb-4">{t.game.title}</h2>
-                        <p className="text-lg text-muted-foreground mb-8">{t.game.welcome}</p>
-                        <button onClick={handleStartGame} className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold py-3 px-8 rounded-lg text-lg transition-transform transform hover:scale-105">
-                            {t.game.start}
-                        </button>
-                    </div>
-                );
-            case 'playing':
-                return (
-                    <div>
-                        <div className="mb-6 text-center">
-                            <p className="text-lg font-bold text-primary">{currentLevel.title}</p>
-                            <p className="text-muted-foreground">Question {currentQuestionIndex + 1} of {currentLevel.questions.length}</p>
-                            <h2 className="text-2xl font-semibold mt-2">{currentQuestion.question}</h2>
-                        </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                            {currentQuestion.options.map((option) => {
-                                const isCorrect = isAnswered && option === currentQuestion.answer;
-                                const isIncorrect = isAnswered && selectedAnswer === option && option !== currentQuestion.answer;
-                                let buttonClass = "p-4 rounded-lg text-lg text-left transition-all duration-300 border-2 ";
-                                if (isCorrect) {
-                                    buttonClass += "bg-green-500 border-green-400 text-white scale-105";
-                                } else if (isIncorrect) {
-                                    buttonClass += "bg-red-600 border-red-500 text-white";
-                                } else if (selectedAnswer === option) {
-                                    buttonClass += "bg-primary border-primary/80 text-primary-foreground";
-                                } else {
-                                    buttonClass += "bg-secondary border-border hover:bg-accent hover:border-primary/50";
-                                }
-                                return (
-                                    <button key={option} onClick={() => handleAnswerSelect(option)} className={buttonClass} disabled={isAnswered}>
-                                        {option}
-                                    </button>
-                                );
-                            })}
-                        </div>
-                        {!isAnswered ? (
-                            <button onClick={handleSubmitAnswer} disabled={selectedAnswer === null} className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-bold py-3 px-4 rounded-lg disabled:bg-muted disabled:cursor-not-allowed">
-                                {t.game.submit}
-                            </button>
-                        ) : (
-                            <div className="text-center">
-                                <p className={`text-xl font-bold mb-4 ${selectedAnswer === currentQuestion.answer ? 'text-green-500' : 'text-red-500'}`}>
-                                    {selectedAnswer === currentQuestion.answer ? t.game.correct : t.game.incorrect}
-                                </p>
-                                <button onClick={handleNext} className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-bold py-3 px-4 rounded-lg">
-                                    {currentQuestionIndex < currentLevel.questions.length - 1 ? t.game.next : "Finish Level"}
-                                </button>
-                            </div>
-                        )}
-                    </div>
-                );
-            case 'level-cleared':
-                 const isLastLevel = currentLevelIndex === levels.length - 1;
-                 return (
-                    <div className="text-center">
-                        <h2 className="text-3xl font-bold mb-4">🎉 Well done! You've completed {currentLevel.title} 🎉</h2>
-                        <p className="text-xl text-muted-foreground mb-8">Current Score: {score} / {levels.slice(0, currentLevelIndex + 1).reduce((a, c) => a + c.questions.length, 0)}</p>
-                        <button onClick={handleNextLevel} className="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-lg text-lg transition-transform transform hover:scale-105">
-                            {isLastLevel ? "View Final Score" : "Next Level"}
-                        </button>
-                    </div>
-                 );
-            case 'end':
-                return (
-                    <div className="text-center">
-                        <h2 className="text-3xl font-bold mb-4">{t.game.congrats}</h2>
-                        <p className="text-xl text-muted-foreground mb-4">{t.game.finalScore} {score} / {totalQuestions}</p>
-                        <div className="bg-secondary p-4 rounded-lg mb-8 border-l-4 border-primary">
-                            <p className="text-lg text-primary">{t.game.hint}</p>
-                        </div>
-                        <button onClick={handleStartGame} className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold py-3 px-8 rounded-lg text-lg transition-transform transform hover:scale-105">
-                            {t.game.playAgain}
-                        </button>
-                    </div>
-                );
-        }
-    };
+    if (activeGame) {
+        const SelectedGame = games.find(g => g.id === activeGame)?.component;
+        return (
+            <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                <button onClick={handleBack} className="flex items-center gap-2 mb-6 text-primary hover:underline font-semibold transition-transform transform hover:-translate-x-1">
+                    <ArrowLeftIcon className="w-5 h-5" />
+                    <span>{t.game.backToGames}</span>
+                </button>
+                {SelectedGame ? <SelectedGame t={t} /> : <p>Game not found.</p>}
+            </div>
+        );
+    }
 
     return (
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
-            <div className="max-w-3xl mx-auto bg-card text-card-foreground p-8 rounded-xl shadow-2xl border border-border min-h-[450px] flex flex-col justify-center">
-                {renderContent()}
+            <header className="text-center mb-12">
+                <h1 className="text-4xl md:text-5xl font-extrabold text-foreground">{t.game.title}</h1>
+                <p className="text-xl text-muted-foreground mt-2">{t.game.welcome}</p>
+            </header>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {games.map((game) => {
+                    const Icon = game.icon;
+                    return (
+                        <div
+                            key={game.id}
+                            onClick={() => handleGameSelect(game.id)}
+                            className="bg-card text-card-foreground p-8 rounded-2xl shadow-lg border border-border hover:shadow-primary/20 hover:border-primary/50 transition-all duration-300 cursor-pointer transform hover:-translate-y-2 group"
+                        >
+                            <div className="flex justify-center mb-4">
+                               <div className="p-4 bg-primary/10 rounded-full group-hover:bg-primary/20 transition-colors">
+                                    <Icon className="w-12 h-12 text-primary" />
+                               </div>
+                            </div>
+                            <h2 className="text-2xl font-bold text-center text-foreground mb-2 group-hover:text-primary transition-colors">{t.game[game.titleKey as keyof typeof t.game]}</h2>
+                            <p className="text-muted-foreground text-center">{t.game[game.descriptionKey as keyof typeof t.game]}</p>
+                        </div>
+                    );
+                })}
             </div>
         </div>
     );

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { PortfolioData, Translation } from '../types';
 import EditableSection from '../components/EditableSection';
 import { PlusIcon, TrashIcon, BookOpenIcon, LightbulbIcon, TrophyIcon, CodeBracketIcon, HeartIcon } from '../components/Icons';
@@ -77,6 +77,28 @@ const AcademicJourneyPage: React.FC<AcademicJourneyPageProps> = ({ data, setData
         { key: 'volunteerWork', title: t.journey.volunteer, content: data.volunteerWork, isList: true, icon: HeartIcon },
     ];
 
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                    }
+                });
+            },
+            {
+                threshold: 0.2,
+            }
+        );
+
+        const elements = document.querySelectorAll('.scroll-animate');
+        elements.forEach((el) => observer.observe(el));
+
+        return () => {
+            elements.forEach((el) => observer.unobserve(el));
+        };
+    }, []);
+
     return (
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
             <header className="text-center mb-16">
@@ -86,8 +108,8 @@ const AcademicJourneyPage: React.FC<AcademicJourneyPageProps> = ({ data, setData
 
             <div className="max-w-4xl mx-auto">
                  <div className="relative ltr:border-l-4 rtl:border-r-4 border-primary/20 space-y-16">
-                    {journeyItems.map((item) => (
-                        <div key={item.key} className="relative ltr:pl-12 rtl:pr-12">
+                    {journeyItems.map((item, index) => (
+                        <div key={item.key} className="relative ltr:pl-12 rtl:pr-12 scroll-animate scroll-animate-timeline" style={{ transitionDelay: `${index * 100}ms` }}>
                             <div className="absolute ltr:-left-7 rtl:-right-7 top-0 flex items-center justify-center w-14 h-14 bg-background rounded-full ring-4 ring-primary">
                                 <item.icon className="w-7 h-7 text-primary" />
                             </div>

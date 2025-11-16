@@ -8,8 +8,8 @@
     --border-radius: 0.75rem;
   }
 
-  /* ----------------- ORANGE THEME ----------------- */
-  [data-theme="orange"] {
+  /* ----------------- DEFAULT (ORANGE) THEME ----------------- */
+  [data-theme="default"] {
     /* Light Mode */
     --background: 240 10% 99%; /* neutral-50 */
     --foreground: 240 10% 3.9%; /* zinc-950 */
@@ -17,7 +17,7 @@
     --card-foreground: 240 10% 3.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 240 10% 3.9%;
-    --primary: 24.6 95% 53.1%; /* orange-600 */
+    --primary: 25 95% 49%; /* orange-600 */
     --primary-foreground: 60 9.1% 97.8%; /* zinc-50 */
     --secondary: 240 4.8% 95.9%; /* neutral-100 */
     --secondary-foreground: 240 5.9% 10%; /* zinc-900 */
@@ -29,10 +29,10 @@
     --destructive-foreground: 60 9.1% 97.8%;
     --border: 240 5.9% 90%; /* neutral-200 */
     --input: 240 5.9% 90%;
-    --ring: 24.6 95% 53.1%; /* orange-600 */
+    --ring: 25 95% 49%; /* orange-600 */
   }
 
-  [data-theme="orange"].dark {
+  [data-theme="default"].dark {
     /* Dark Mode */
     --background: 240 10% 3.9%; /* zinc-950 */
     --foreground: 0 0% 98%; /* neutral-50 */
@@ -40,8 +40,8 @@
     --card-foreground: 0 0% 98%;
     --popover: 240 10% 3.9%;
     --popover-foreground: 0 0% 98%;
-    --primary: 35.5 91.7% 54.5%; /* orange-500 */
-    --primary-foreground: 60 9.1% 97.8%;
+    --primary: 25 95% 53%; /* orange-500 */
+    --primary-foreground: 60 9.1% 97.8%; /* zinc-50 */
     --secondary: 240 3.7% 15.9%; /* zinc-800 */
     --secondary-foreground: 0 0% 98%;
     --muted: 240 3.7% 15.9%;
@@ -52,12 +52,42 @@
     --destructive-foreground: 0 0% 98%;
     --border: 240 3.7% 15.9%;
     --input: 240 3.7% 15.9%;
-    --ring: 35.5 91.7% 54.5%; /* orange-500 */
+    --ring: 25 95% 53%; /* orange-500 */
   }
 }
 
 @layer base {
   body {
     @apply bg-background text-foreground transition-colors duration-200;
+  }
+}
+
+/* Animation Styles */
+@layer components {
+  .scroll-animate {
+    opacity: 0;
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    will-change: opacity, transform;
+  }
+  
+  .scroll-animate.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  .scroll-animate-up {
+    transform: translateY(30px);
+  }
+
+  .scroll-animate-timeline {
+    transform: var(--timeline-transform);
+  }
+
+  [dir="ltr"] {
+    --timeline-transform: translateX(-50px);
+  }
+
+  [dir="rtl"] {
+    --timeline-transform: translateX(50px);
   }
 }
