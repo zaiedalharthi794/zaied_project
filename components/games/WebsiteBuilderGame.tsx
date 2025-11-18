@@ -1,7 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { Translation } from '../../types';
-import { LayoutTemplateIcon, PaletteIcon, PencilSwooshIcon, CodeBracketIcon } from '../Icons';
-
+import { LayoutTemplateIcon, PaletteIcon, CodeBracketIcon } from '../Icons';
 
 interface SiteConfig {
     name: string;
@@ -38,25 +37,106 @@ const featureOptions: { name: keyof Translation['game']['websiteBuilderSteps']['
     { name: 'contact' },
 ];
 
+const SitePreview: React.FC<{ config: SiteConfig }> = ({ config }) => {
+    const colorSchemes = {
+        red: { bg: 'bg-red-600', text: 'text-red-600', lightBg: 'bg-red-50', cardBg: 'bg-white', darkText: 'text-red-900', ring: 'ring-red-500', buttonText: 'text-white' },
+        blue: { bg: 'bg-blue-600', text: 'text-blue-600', lightBg: 'bg-blue-50', cardBg: 'bg-white', darkText: 'text-blue-900', ring: 'ring-blue-500', buttonText: 'text-white' },
+        green: { bg: 'bg-green-600', text: 'text-green-600', lightBg: 'bg-green-50', cardBg: 'bg-white', darkText: 'text-green-900', ring: 'ring-green-500', buttonText: 'text-white' },
+        indigo: { bg: 'bg-indigo-600', text: 'text-indigo-600', lightBg: 'bg-indigo-50', cardBg: 'bg-white', darkText: 'text-indigo-900', ring: 'ring-indigo-500', buttonText: 'text-white' },
+    };
+    
+    const styles = colorSchemes[config.color];
+    const fontClass = `font-${config.font}`;
+
+    const mainContent = (
+        <div className="space-y-4">
+             {/* Hero Section */}
+            <div className="text-center p-4 rounded-lg">
+                <h2 className={`text-2xl font-bold ${styles.darkText} ${fontClass}`}>{config.welcome || 'Welcome Message'}</h2>
+                <p className="text-xs text-gray-500 mt-1">This is a subtitle describing the website's purpose.</p>
+                <button className={`mt-2 px-3 py-1 ${styles.bg} ${styles.buttonText} text-xs rounded-md shadow-md hover:opacity-90`}>
+                    Call to Action
+                </button>
+            </div>
+
+            {/* About Section */}
+            <div className={`${styles.cardBg} p-3 rounded-lg shadow-sm`}>
+                <h3 className={`text-sm font-bold ${styles.darkText} ${fontClass}`}>About Me</h3>
+                <p className="text-xs text-gray-600 mt-1">{config.about || 'About section content...'}</p>
+            </div>
+
+             {/* Feature Section */}
+             {config.layout !== 'grid' && (
+                <div className={`${styles.cardBg} p-3 rounded-lg shadow-sm`}>
+                    <h3 className={`text-sm font-bold ${styles.darkText} ${fontClass}`}>{config.feature || "Feature"}</h3>
+                    <div className="mt-2 space-y-1">
+                        <div className="w-full h-2 bg-gray-200 rounded"></div>
+                        <div className="w-3/4 h-2 bg-gray-200 rounded"></div>
+                    </div>
+                </div>
+             )}
+        </div>
+    );
+
+    return (
+        <div className={`w-full h-[26rem] ${styles.lightBg} rounded-lg shadow-lg border-4 border-border overflow-hidden ${fontClass}`}>
+            {/* Header */}
+            <header className={`${styles.bg} p-2 text-white flex items-center justify-between shadow-md`}>
+                <div className="flex items-center gap-1">
+                    <CodeBracketIcon className="w-3 h-3"/>
+                    <p className="text-xs font-bold truncate">{config.name || 'SiteName'}</p>
+                </div>
+                <div className="flex items-center gap-2 text-xs">
+                    <span>Home</span>
+                    <span>About</span>
+                    <span>Contact</span>
+                </div>
+            </header>
+
+            {/* Body */}
+            <div className="p-2 text-sm h-full overflow-y-auto">
+                {config.layout === 'sidebar' ? (
+                    <div className="grid grid-cols-12 gap-2 h-full">
+                        <div className="col-span-8">{mainContent}</div>
+                        <div className="col-span-4">
+                             <div className={`${styles.cardBg} p-2 rounded-lg shadow-sm`}>
+                                <h4 className={`text-xs font-bold ${styles.darkText} ${fontClass}`}>Sidebar</h4>
+                                <ul className="text-xs text-gray-500 mt-1 space-y-1">
+                                    <li className={`${styles.text} font-semibold`}>Link 1</li>
+                                    <li>Link 2</li>
+                                    <li>Link 3</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                ) : config.layout === 'grid' ? (
+                    <div className="grid grid-cols-2 gap-2">
+                        {mainContent}
+                        <div className={`${styles.cardBg} p-3 rounded-lg shadow-sm`}>
+                            <h3 className={`text-sm font-bold ${styles.darkText} ${fontClass}`}>{config.feature || "Feature"}</h3>
+                            <div className="mt-2 space-y-1">
+                                <div className="w-full h-2 bg-gray-200 rounded"></div>
+                                <div className="w-3/4 h-2 bg-gray-200 rounded"></div>
+                            </div>
+                        </div>
+                    </div>
+                ) : (
+                    mainContent
+                )}
+            </div>
+        </div>
+    );
+};
 
 const WebsiteBuilderGame: React.FC<{ t: Translation }> = ({ t }) => {
-    const [gameState, setGameState] = useState<'build' | 'challenge' | 'challenge_end'>('build');
-    const [buildStep, setBuildStep] = useState(0); // 0-5 for stages, 6 for completion
+    const [buildStep, setBuildStep] = useState(0); 
     
     const initialSiteConfig: SiteConfig = {
         name: '', color: 'blue', layout: 'default', welcome: '', about: '', font: 'sans', feature: ''
     };
     const [siteConfig, setSiteConfig] = useState<SiteConfig>(initialSiteConfig);
-    
     const [textInputs, setTextInputs] = useState({ name: '', welcome: '', about: '' });
 
-    // Challenge State
-    const [challengeQuestionIndex, setChallengeQuestionIndex] = useState(0);
-    const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
-    const [isAnswered, setIsAnswered] = useState(false);
-    const [challengeScore, setChallengeScore] = useState(0);
-
-    const challengeContent = t.game.websiteBuilderChallenge;
     const stepsContent = t.game.websiteBuilderSteps;
     const TOTAL_BUILD_STEPS = 6;
 
@@ -69,36 +149,9 @@ const WebsiteBuilderGame: React.FC<{ t: Translation }> = ({ t }) => {
     };
     
     const handleResetBuilder = () => {
-        setGameState('build');
         setBuildStep(0);
         setSiteConfig(initialSiteConfig);
         setTextInputs({ name: '', welcome: '', about: '' });
-    };
-
-    const startChallenge = () => {
-        setGameState('challenge');
-        setChallengeQuestionIndex(0);
-        setSelectedAnswer(null);
-        setIsAnswered(false);
-        setChallengeScore(0);
-    };
-
-    const handleCheckAnswer = () => {
-        if (selectedAnswer === null) return;
-        setIsAnswered(true);
-        if(selectedAnswer === challengeContent.questions[challengeQuestionIndex].answer) {
-            setChallengeScore(s => s + 1);
-        }
-    };
-    
-    const handleNextQuestion = () => {
-        if (challengeQuestionIndex < challengeContent.questions.length - 1) {
-            setChallengeQuestionIndex(i => i + 1);
-            setSelectedAnswer(null);
-            setIsAnswered(false);
-        } else {
-            setGameState('challenge_end');
-        }
     };
 
     const renderBuildControls = () => {
@@ -203,143 +256,43 @@ const WebsiteBuilderGame: React.FC<{ t: Translation }> = ({ t }) => {
                         <h3 className="text-2xl font-bold text-green-500 mb-2">🎉 {stepsContent.finish.title} 🎉</h3>
                         <p className="text-muted-foreground mb-2">{stepsContent.finish.congrats}</p>
                         <p className="text-muted-foreground mb-6">{stepsContent.finish.prompt}</p>
-                        <button onClick={startChallenge} className="w-full bg-primary text-primary-foreground font-bold py-3 px-8 rounded-lg text-lg transform hover:scale-105 transition-transform">
-                            {stepsContent.finish.startChallenge}
+                        <button onClick={handleResetBuilder} className="w-full bg-primary text-primary-foreground font-bold py-3 px-8 rounded-lg text-lg transform hover:scale-105 transition-transform">
+                            {stepsContent.finish.buildAgain}
                         </button>
                     </div>
                 )
             default: return null;
         }
     };
-    
-    const renderChallenge = () => {
-        if(gameState === 'challenge_end') {
-            return (
-                 <div className="text-center p-8 bg-secondary/50 rounded-lg">
-                    <h3 className="text-2xl font-bold mb-4">{challengeContent.finalScore}</h3>
-                    <p className="text-5xl font-bold text-primary mb-6">{challengeScore} / {challengeContent.questions.length}</p>
-                     <button onClick={handleResetBuilder} className="bg-primary text-primary-foreground font-bold py-2 px-6 rounded-lg mr-2">
-                        {challengeContent.playBuilderAgain}
-                    </button>
-                    <button onClick={startChallenge} className="bg-secondary text-secondary-foreground font-bold py-2 px-6 rounded-lg">
-                        {t.game.playAgain}
-                    </button>
-                </div>
-            )
-        }
 
-        const question = challengeContent.questions[challengeQuestionIndex];
-        return (
-            <div>
-                 <h3 className="text-2xl font-bold text-center mb-2">{challengeContent.title}</h3>
-                 <p className="text-muted-foreground text-center mb-6">{challengeContent.subtitle}</p>
-
-                 <div className="bg-secondary/50 p-6 rounded-lg border border-border">
-                    <p className="text-sm text-muted-foreground mb-2">{challengeContent.questionLabel} {challengeQuestionIndex + 1}/{challengeContent.questions.length}</p>
-                    <p className="text-lg font-semibold mb-4">{question.question}</p>
-                    <div className="space-y-2">
-                        {question.options.map(option => {
-                            const isCorrect = isAnswered && option === question.answer;
-                            const isIncorrect = isAnswered && selectedAnswer === option && option !== question.answer;
-                            let buttonClass = "w-full p-3 rounded-lg text-left border-2 ";
-                            if (isCorrect) buttonClass += "bg-green-500 border-green-400 text-white";
-                            else if (isIncorrect) buttonClass += "bg-red-600 border-red-500 text-white";
-                            else if (selectedAnswer === option) buttonClass += "bg-primary/50 border-primary text-primary-foreground";
-                            else buttonClass += "bg-input border-border hover:bg-accent";
-                            
-                            return <button key={option} onClick={() => setSelectedAnswer(option)} disabled={isAnswered} className={buttonClass}>{option}</button>
-                        })}
-                    </div>
-                    {isAnswered && (
-                        <div className={`mt-4 p-2 rounded-md text-sm ${selectedAnswer === question.answer ? 'bg-green-500/20 text-green-700' : 'bg-red-500/20 text-red-700'}`}>
-                           <strong>{selectedAnswer === question.answer ? challengeContent.correctAnswer : challengeContent.wrongAnswer}</strong> {question.explanation}
-                        </div>
-                    )}
-                    <button 
-                        onClick={isAnswered ? handleNextQuestion : handleCheckAnswer} 
-                        disabled={!isAnswered && selectedAnswer === null}
-                        className="w-full mt-4 bg-primary text-primary-foreground font-bold py-2 px-4 rounded hover:bg-primary/90 disabled:bg-muted"
-                    >
-                        {isAnswered 
-                            ? (challengeQuestionIndex < challengeContent.questions.length - 1 ? challengeContent.nextQuestion : challengeContent.viewResults) 
-                            : challengeContent.checkAnswer}
-                    </button>
-                 </div>
-            </div>
-        )
-    }
-
-    const colorClasses = {
-        bg: `bg-${siteConfig.color}-600`,
-        text: `text-${siteConfig.color}-600`,
-        border: `border-${siteConfig.color}-600`,
-    }
-
-    const fontClasses = {
-        heading: `font-${siteConfig.font}`,
-        body: `font-${siteConfig.font}`,
-    }
-
-    const previewLayoutClass = useMemo(() => {
-        switch (siteConfig.layout) {
-            case 'sidebar': return 'grid grid-cols-4 gap-2';
-            case 'grid': return 'grid grid-cols-2 gap-2';
-            default: return 'flex flex-col';
-        }
-    }, [siteConfig.layout]);
-
-    if (!stepsContent || !challengeContent) return <p>Loading...</p>;
+    if (!stepsContent) return <p>Loading...</p>;
 
     return (
         <div className="max-w-6xl mx-auto bg-card text-card-foreground p-4 sm:p-6 rounded-xl shadow-2xl border border-border">
-            {gameState === 'build' ? (
-                <>
-                    <h2 className="text-2xl md:text-3xl font-bold mb-1 text-center">{t.game.websiteBuilderTitle}</h2>
-                     <div className="text-center mb-4">
-                        <p className="text-muted-foreground">{stepsContent.progress}: {buildStep} / {TOTAL_BUILD_STEPS}</p>
-                        <div className="w-full bg-secondary rounded-full h-2.5 mt-1">
-                            <div className="bg-primary h-2.5 rounded-full" style={{ width: `${(buildStep / TOTAL_BUILD_STEPS) * 100}%`, transition: 'width 0.5s ease' }}></div>
-                        </div>
-                    </div>
-                    <div className="grid md:grid-cols-2 gap-6 items-start">
-                        <div className="bg-secondary/50 p-4 rounded-lg border border-border">
-                            {renderBuildControls()}
-                        </div>
-                        <div>
-                            <h3 className="text-xl font-bold mb-2 text-center">{stepsContent.preview}</h3>
-                            <div className={`w-full h-96 bg-background rounded-lg shadow-lg border-4 border-border overflow-hidden transform scale-90 sm:scale-100 ${fontClasses.body}`}>
-                                <header className={`${colorClasses.bg} p-2 text-white flex items-center`}>
-                                    <div className="w-2 h-2 rounded-full bg-white/30 mr-1"></div><div className="w-2 h-2 rounded-full bg-white/30 mr-1"></div><div className="w-2 h-2 rounded-full bg-white/30 mr-2"></div>
-                                    <p className="text-xs flex-grow text-center truncate">{siteConfig.name || '...'}</p>
-                                </header>
-                                <main className={`p-3 text-sm ${previewLayoutClass}`}>
-                                    <div className={siteConfig.layout === 'sidebar' ? 'col-span-3' : 'w-full'}>
-                                        <h1 className={`text-xl font-bold ${colorClasses.text} ${fontClasses.heading} truncate`}>{siteConfig.name || 'Site Title'}</h1>
-                                        <p className="mt-1 text-muted-foreground">{siteConfig.welcome || 'Welcome message goes here...'}</p>
-                                        <div className="mt-3">
-                                            <h2 className={`font-bold ${fontClasses.heading}`}>About Me</h2>
-                                            <p className="text-muted-foreground text-xs">{siteConfig.about || 'About section content...'}</p>
-                                        </div>
-                                    </div>
-                                    {(siteConfig.feature || siteConfig.layout === 'sidebar') && (
-                                         <div className={`${siteConfig.layout === 'sidebar' ? 'col-span-1' : ''} mt-3`}>
-                                            <div className="p-2 bg-secondary rounded-md">
-                                                <h4 className={`font-bold text-foreground text-xs mb-1 ${fontClasses.heading}`}>{siteConfig.feature || "Feature"}</h4>
-                                                <div className="w-full h-4 bg-muted rounded"></div>
-                                                <div className="w-3/4 h-4 bg-muted rounded mt-1"></div>
-                                            </div>
-                                        </div>
-                                    )}
-                                </main>
-                            </div>
-                        </div>
-                    </div>
-                </>
-            ) : (
-                renderChallenge()
-            )}
+            <h2 className="text-2xl md:text-3xl font-bold mb-1 text-center">{t.game.websiteBuilderTitle}</h2>
+                <div className="text-center mb-4">
+                <p className="text-muted-foreground">{stepsContent.progress}: {buildStep} / {TOTAL_BUILD_STEPS}</p>
+                <div className="w-full bg-secondary rounded-full h-2.5 mt-1">
+                    <div className="bg-primary h-2.5 rounded-full" style={{ width: `${(buildStep / TOTAL_BUILD_STEPS) * 100}%`, transition: 'width 0.5s ease' }}></div>
+                </div>
+            </div>
+            <div className="grid md:grid-cols-2 gap-6 items-start">
+                <div className="bg-secondary/50 p-4 rounded-lg border border-border">
+                    {renderBuildControls()}
+                </div>
+                <div>
+                    <h3 className="text-xl font-bold mb-2 text-center">{stepsContent.preview}</h3>
+                    <SitePreview config={siteConfig} />
+                </div>
+            </div>
         </div>
     );
 };
 
 export default WebsiteBuilderGame;
+// Dummy classes to help Tailwind's JIT compiler
+// bg-red-600 text-red-600 bg-red-50 text-red-900 ring-red-500
+// bg-blue-600 text-blue-600 bg-blue-50 text-blue-900 ring-blue-500
+// bg-green-600 text-green-600 bg-green-50 text-green-900 ring-green-500
+// bg-indigo-600 text-indigo-600 bg-indigo-50 text-indigo-900 ring-indigo-500
+// font-sans font-serif font-mono

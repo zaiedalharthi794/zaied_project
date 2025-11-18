@@ -10,15 +10,18 @@ export interface StudentInfo {
 }
 
 export interface Evaluation {
-    teacher: string;
+    id?: string;
+    name: string;
+    role: string;
     text: string;
+    date?: string;
 }
 
 export interface PortfolioData {
     studentInfo: StudentInfo;
     aboutMe: string;
     education: string;
-    selfReflection: string; // Added this line
+    selfReflection: string;
     achievements: string[];
     skills: string[];
     projects: string[];
@@ -41,21 +44,6 @@ export interface GameLevel {
     title: string;
     questions: GameQuestion[];
 }
-
-export interface IconGameQuestion {
-    iconName: string;
-    questionText: string;
-    correctAnswer: string;
-    options: string[];
-}
-
-export interface ChallengeQuestion {
-    question: string;
-    options: string[];
-    answer: string;
-    explanation: string;
-}
-
 
 export interface Translation {
     appName: string;
@@ -85,7 +73,7 @@ export interface Translation {
     journey: {
         title: string;
         education: string;
-        selfReflection: string; // Added this line
+        selfReflection: string;
         achievements: string;
         projects: string;
         volunteer: string;
@@ -95,11 +83,12 @@ export interface Translation {
     evaluation: {
         title: string;
         prompt: string;
-        teacherName: string;
         placeholder: string;
         submit: string;
         success: string;
         previousEvaluations: string;
+        namePlaceholder: string;
+        rolePlaceholder: string;
     };
     game: {
         title: string;
@@ -114,7 +103,6 @@ export interface Translation {
         hint: string;
         playAgain: string;
         levels: GameLevel[];
-        // New keys for Game Hub
         quizTitle: string;
         quizDescription: string;
         memoryTitle: string;
@@ -123,7 +111,6 @@ export interface Translation {
         iconGameDescription: string;
         iconGameQuestions: IconGameQuestion[];
         backToGames: string;
-        // New keys for Website Builder Game
         websiteBuilderTitle: string;
         websiteBuilderDescription: string;
         websiteBuilderSteps: {
@@ -173,24 +160,12 @@ export interface Translation {
                 title: string;
                 congrats: string;
                 prompt: string;
-                startChallenge: string;
+                buildAgain: string;
             };
             preview: string;
             progress: string;
         };
-        websiteBuilderChallenge: {
-            title: string;
-            subtitle: string;
-            questionLabel: string;
-            checkAnswer: string;
-            nextQuestion: string;
-            viewResults: string;
-            correctAnswer: string;
-            wrongAnswer: string;
-            finalScore: string;
-            playBuilderAgain: string;
-            questions: ChallengeQuestion[];
-        };
+        puzzleTitle: string;
     };
     theme: {
         select: string;
@@ -238,4 +213,11 @@ export interface EditableSectionProps {
 export interface ChatMessage {
     role: 'user' | 'model';
     text: string;
+}
+
+export interface IconGameQuestion {
+    iconName: string;
+    questionText: string;
+    correctAnswer: string;
+    options: string[];
 }

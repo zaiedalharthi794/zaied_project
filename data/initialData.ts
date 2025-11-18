@@ -1,6 +1,6 @@
 
 
-import { PortfolioData, Translation, Language, GameLevel, IconGameQuestion, ChallengeQuestion } from '../types';
+import { PortfolioData, Translation, Language, GameLevel, IconGameQuestion } from '../types';
 
 export const initialData: PortfolioData = {
     studentInfo: {
@@ -308,52 +308,26 @@ const enIconGameQuestions: IconGameQuestion[] = [
     }
 ];
 
-const arChallengeQuestions: ChallengeQuestion[] = [
-    { question: "ما هي اللغة الأساسية لبناء صفحات الويب؟", options: ["HTML", "CSS", "Python", "Java"], answer: "HTML", explanation: "HTML هي الهيكل الأساسي لأي صفحة ويب." },
-    { question: "ما هي اللغة المستخدمة لتلوين وتنسيق صفحات الويب؟", options: ["HTML", "JavaScript", "CSS", "SQL"], answer: "CSS", explanation: "CSS مسؤولة عن المظهر الجمالي للموقع." },
-    { question: "ما هو الوسم المستخدم لكتابة العنوان الرئيسي في صفحة HTML؟", options: ["<h1>", "<p>", "<div>", "<span>"], answer: "<h1>", explanation: "<h1> يُستخدم للعنوان الأهم والأكبر في الصفحة." },
-    { question: "ما هو دور وسم <p>؟", options: ["إنشاء رابط", "عرض صورة", "كتابة فقرة نصية", "إنشاء عنوان"], answer: "كتابة فقرة نصية", explanation: "يُستخدم الوسم <p> لتعريف الفقرات النصية." },
-    { question: "أي وسم يُستخدم لإدراج صورة في صفحة HTML؟", options: ["<image>", "<pic>", "<img>", "<src>"], answer: "<img>", explanation: "الوسم الصحيح لإدراج الصور هو <img>." },
-    { question: "ما هو الوسم المستخدم لإنشاء رابط تشعبي (link)؟", options: ["<link>", "<a>", "<href>", "<nav>"], answer: "<a>", explanation: "الوسم <a> (anchor) يُستخدم لإنشاء روابط تنقل المستخدم إلى صفحات أخرى." },
-    { question: "أي خاصية CSS تستخدم لتغيير لون النص؟", options: ["background-color", "color", "font-size", "text-align"], answer: "color", explanation: "خاصية 'color' هي المسؤولة عن تحديد لون النص." },
-    { question: "أي خاصية CSS تستخدم لتغيير لون الخلفية؟", options: ["color", "background-color", "font-size", "text-align"], answer: "background-color", explanation: "خاصية 'background-color' هي المسؤولة عن تحديد لون خلفية العنصر." },
-    { question: "ما هو الجزء العلوي من الموقع الذي يحتوي عادة على الشعار وقائمة التنقل؟", options: ["Footer", "Main", "Header", "Sidebar"], answer: "Header", explanation: "الـ Header أو 'الرأس' هو المكان الشائع للشعار والقائمة." },
-    { question: "ما هو الجزء السفلي من الموقع الذي يحتوي عادة على معلومات حقوق النشر؟", options: ["Header", "Main", "Sidebar", "Footer"], answer: "Footer", explanation: "الـ Footer أو 'التذييل' هو المكان الشائع لهذه المعلومات." },
-    { question: "ما هو وسم القائمة غير المرتبة (نقاط)؟", options: ["<ol>", "<ul>", "<li>", "<list>"], answer: "<ul>", explanation: "<ul> (Unordered List) تُستخدم لإنشاء قوائم نقطية." },
-    { question: "أي خاصية CSS تتحكم في حجم الخط؟", options: ["font-style", "font-weight", "text-size", "font-size"], answer: "font-size", explanation: "خاصية font-size هي التي تحدد حجم النص." },
-    { question: "ماذا يعني 'التصميم المتجاوب' (Responsive Design)؟", options: ["تصميم سريع", "تصميم ملون", "تصميم يتجاوب مع مختلف أحجام الشاشات", "تصميم ثابت"], answer: "تصميم يتجاوب مع مختلف أحجام الشاشات", explanation: "التصميم المتجاوب يضمن عرض الموقع بشكل جيد على الأجهزة المختلفة." },
-    { question: "كيف تكتب تعليقًا في ملف HTML؟", options: ["// تعليق", "<!-- تعليق -->", "/* تعليق */", "# تعليق"], answer: "<!-- تعليق -->", explanation: "التعليقات في HTML تبدأ بـ <!-- وتنتهي بـ -->." },
-    { question: "ما هو العنصر الذي يمثل 'الصندوق' الأساسي في تخطيطات CSS؟", options: ["<span>", "<p>", "<div>", "<a>"], answer: "<div>", explanation: "<div> هو عنصر حاوية عام يُستخدم لتجميع العناصر وتطبيق الأنماط عليها." }
-];
-
-const enChallengeQuestions: ChallengeQuestion[] = [
-    { question: "What is the primary language for building web pages?", options: ["HTML", "CSS", "Python", "Java"], answer: "HTML", explanation: "HTML is the fundamental structure of any webpage." },
-    { question: "What language is used to color and style web pages?", options: ["HTML", "JavaScript", "CSS", "SQL"], answer: "CSS", explanation: "CSS is responsible for the visual appearance of a site." },
-    { question: "What is the tag used for the main heading in an HTML page?", options: ["<h1>", "<p>", "<div>", "<span>"], answer: "<h1>", explanation: "<h1> is used for the most important, top-level heading on the page." },
-    { question: "What is the role of the <p> tag?", options: ["Create a link", "Display an image", "Write a paragraph of text", "Create a heading"], answer: "Write a paragraph of text", explanation: "The <p> tag is used to define paragraphs." },
-    { question: "Which tag is used to insert an image in an HTML page?", options: ["<image>", "<pic>", "<img>", "<src>"], answer: "<img>", explanation: "The correct tag for inserting images is <img>." },
-    { question: "What is the tag used to create a hyperlink?", options: ["<link>", "<a>", "<href>", "<nav>"], answer: "<a>", explanation: "The <a> (anchor) tag is used to create links that take the user to other pages." },
-    { question: "Which CSS property is used to change the text color?", options: ["background-color", "color", "font-size", "text-align"], answer: "color", explanation: "The 'color' property is responsible for setting the color of the text." },
-    { question: "Which CSS property is used to change the background color?", options: ["color", "background-color", "font-size", "text-align"], answer: "background-color", explanation: "The 'background-color' property sets the background color of an element." },
-    { question: "What is the top section of a website, usually containing the logo and navigation menu?", options: ["Footer", "Main", "Header", "Sidebar"], answer: "Header", explanation: "The header is the common place for the logo and navigation." },
-    { question: "What is the bottom section of a website, usually containing copyright info?", options: ["Header", "Main", "Sidebar", "Footer"], answer: "Footer", explanation: "The footer is the common place for this information." },
-    { question: "What is the tag for an unordered (bulleted) list?", options: ["<ol>", "<ul>", "<li>", "<list>"], answer: "<ul>", explanation: "<ul> (Unordered List) is used to create bulleted lists." },
-    { question: "Which CSS property controls the font size?", options: ["font-style", "font-weight", "text-size", "font-size"], answer: "font-size", explanation: "The font-size property specifies the size of the text." },
-    { question: "What does 'Responsive Design' mean?", options: ["A fast design", "A colorful design", "A design that adapts to different screen sizes", "A static design"], answer: "A design that adapts to different screen sizes", explanation: "Responsive design ensures the site looks good on all devices." },
-    { question: "How do you write a comment in an HTML file?", options: ["// comment", "<!-- comment -->", "/* comment */", "# comment"], answer: "<!-- comment -->", explanation: "Comments in HTML start with <!-- and end with -->." },
-    { question: "Which element is the primary 'box' for CSS layouts?", options: ["<span>", "<p>", "<div>", "<a>"], answer: "<div>", explanation: "<div> is a generic container element used to group items and apply styles." }
-];
 
 const ar: Translation = {
     appName: "انجازات زايد",
-    nav: { home: "الرئيسية", journey: "المسيرة الأكاديمية", evaluation: "تعليقات المعلمين", game: "شبكة الألعاب" },
+    nav: { home: "الرئيسية", journey: "المسيرة الأكاديمية", evaluation: "تعليقات زايد", game: "شبكة الألعاب" },
     footer: { rights: "جميع الحقوق محفوظة لـ" },
     login: { title: "دخول المدير", password: "كلمة المرور", enter: "دخول", close: "إغلاق" },
     home: {
         welcome: "مرحباً بك في ملف إنجازاتي", student: "الطالب", aboutMe: "نبذة عني", skills: "المهارات", hobbies: "الهوايات", goals: "الأهداف"
     },
     journey: { title: "رحلتي الأكاديمية", education: "التعليم", selfReflection: "تأملات حول بدايتي", achievements: "الإنجازات الأكاديمية", projects: "المشاريع والأبحاث", volunteer: "الأعمال التطوعية", gallery: "معرض الأعمال", captionPrompt: "أدخل وصفًا للصورة الجديدة:" },
-    evaluation: { title: "صفحة تعليقات المعلمين", prompt: "أضف تعليقًا يا معلمي الفاضل", teacherName: "اسم المعلم", placeholder: "اكتب تعليقك هنا...", submit: "إرسال التعليق", success: "تم إرسال تعليقك بنجاح. شكراً لك!", previousEvaluations: "التعليقات السابقة" },
+    evaluation: { 
+        title: "تعليقات المعلمين", 
+        prompt: "أضف تعليقاً جديداً", 
+        placeholder: "اكتب تعليقك هنا...", 
+        submit: "إرسال التعليق", 
+        success: "تم إرسال التعليق بنجاح!", 
+        previousEvaluations: "التعليقات السابقة",
+        namePlaceholder: "الاسم",
+        rolePlaceholder: "المادة / الصفة"
+    },
     game: { 
         title: "شبكة الألعاب",
         welcome: "اختر لعبة من القائمة أدناه واستمتع بوقتك!",
@@ -423,25 +397,13 @@ const ar: Translation = {
             finish: {
                 title: "اكتمل البناء!",
                 congrats: "تهانينا، لقد بنيت موقعك بنجاح.",
-                prompt: "الآن، هل أنت مستعد لاختبار معلوماتك في تصميم المواقع؟",
-                startChallenge: "ابدأ تحدي التصميم",
+                prompt: "لقد أبدعت في بناء موقعك! هل ترغب في بناء واحد آخر؟",
+                buildAgain: "بناء موقع آخر",
             },
             preview: "معاينة حية",
             progress: "التقدم",
         },
-        websiteBuilderChallenge: {
-            title: "تحدي التصميم: حط المطلوب",
-            subtitle: "أجب عن الأسئلة التالية لاختبار معرفتك.",
-            questionLabel: "سؤال",
-            checkAnswer: "تحقق من الإجابة",
-            nextQuestion: "السؤال التالي",
-            viewResults: "عرض النتائج",
-            correctAnswer: "صحيح!",
-            wrongAnswer: "خطأ!",
-            finalScore: "النتيجة النهائية",
-            playBuilderAgain: "بناء موقع آخر",
-            questions: arChallengeQuestions,
-        },
+        puzzleTitle: "لعبة البازل",
     },
     theme: { select: "المظهر", light: "فاتح", dark: "داكن", system: "النظام", language: "اللغة", font: "الخط" },
     admin: { edit: "تعديل", save: "حفظ", addItem: "إضافة عنصر", removeItem: "حذف", upload: "رفع صورة جديدة", change: "تغيير", deleteItem: "حذف الصورة", uploadError: "فشل رفع الصورة.", deleteConfirm: "هل أنت متأكد من حذف هذه الصورة؟", deleteError: "فشل حذف الصورة.", avatarUploadError: "فشل رفع صورة الملف الشخصي.", imageTooLargeError: "الصورة كبيرة جداً. الرجاء رفع صورة أصغر من 500 كيلوبايت.", imageReadError: "فشل قراءة ملف الصورة.", deleteEvaluation: "حذف التعليق", deleteEvaluationConfirm: "هل أنت متأكد من حذف هذا التعليق؟" },
@@ -449,15 +411,24 @@ const ar: Translation = {
 };
 
 const en: Translation = {
-    appName: "Zaied's Achievements",
-    nav: { home: "Home", journey: "Academic Journey", evaluation: "Teacher Comments", game: "Game Arcade" },
+    appName: "Zayed's Achievements",
+    nav: { home: "Home", journey: "Academic Journey", evaluation: "Zayed's Comments", game: "Game Arcade" },
     footer: { rights: "All rights reserved for" },
     login: { title: "Admin Login", password: "Password", enter: "Login", close: "Close" },
     home: {
         welcome: "Welcome to my Portfolio", student: "Student", aboutMe: "About Me", skills: "Skills", hobbies: "Hobbies", goals: "Goals"
     },
     journey: { title: "My Academic Journey", education: "Education", selfReflection: "Reflections on My Start", achievements: "Academic Achievements", projects: "Projects & Research", volunteer: "Volunteer Work", gallery: "Gallery", captionPrompt: "Enter a caption for the new image:" },
-    evaluation: { title: "Teacher Comments Page", prompt: "Add a comment, my dear teacher", teacherName: "Teacher's Name", placeholder: "Write your comment here...", submit: "Submit Comment", success: "Your comment has been submitted successfully. Thank you!", previousEvaluations: "Previous Comments" },
+    evaluation: { 
+        title: "Teachers' Comments", 
+        prompt: "Add a new comment", 
+        placeholder: "Write your comment here...", 
+        submit: "Post Comment", 
+        success: "Comment posted successfully!", 
+        previousEvaluations: "Previous Comments",
+        namePlaceholder: "Name",
+        rolePlaceholder: "Subject / Role"
+    },
     game: { 
         title: "Game Arcade",
         welcome: "Choose a game from the list below and have fun!",
@@ -472,9 +443,9 @@ const en: Translation = {
         playAgain: "Play Again",
         levels: enGameLevels,
         quizTitle: "Challenge Quiz",
-        quizDescription: "Test your knowledge about Zaied in this fun quiz.",
+        quizDescription: "Test your knowledge about Zayed in this fun quiz.",
         memoryTitle: "Memory Game",
-        memoryDescription: "Match cards representing Zaied's hobbies and skills.",
+        memoryDescription: "Match cards representing Zayed's hobbies and skills.",
         iconGameTitle: "Icon Match Game",
         iconGameDescription: "Match the icon to the correct project or achievement.",
         iconGameQuestions: enIconGameQuestions,
@@ -527,29 +498,39 @@ const en: Translation = {
             finish: {
                 title: "Build Complete!",
                 congrats: "Congratulations, you've successfully built your site.",
-                prompt: "Now, are you ready to test your web design knowledge?",
-                startChallenge: "Start the Design Challenge",
+                prompt: "You did a great job building your site! Want to build another one?",
+                buildAgain: "Build Another Site",
             },
             preview: "Live Preview",
             progress: "Progress",
         },
-        websiteBuilderChallenge: {
-            title: "Design Challenge: What's Required",
-            subtitle: "Answer the following questions to test your knowledge.",
-            questionLabel: "Question",
-            checkAnswer: "Check Answer",
-            nextQuestion: "Next Question",
-            viewResults: "View Results",
-            correctAnswer: "Correct!",
-            wrongAnswer: "Wrong!",
-            finalScore: "Final Score",
-            playBuilderAgain: "Build Another Site",
-            questions: enChallengeQuestions,
-        },
+        puzzleTitle: "Puzzle Game",
     },
     theme: { select: "Theme", light: "Light", dark: "Dark", system: "System", language: "Language", font: "Font" },
-    admin: { edit: "Edit", save: "Save", addItem: "Add Item", removeItem: "Remove", upload: "Upload New Image", change: "Change", deleteItem: "Delete Image", uploadError: "Failed to upload image.", deleteConfirm: "Are you sure you want to delete this image?", deleteError: "Failed to delete image.", avatarUploadError: "Failed to upload avatar image.", imageTooLargeError: "Image is too large. Please upload an image smaller than 500KB.", imageReadError: "Failed to read the image file.", deleteEvaluation: "Delete Comment", deleteEvaluationConfirm: "Are you sure you want to delete this comment?" },
-    chatbot: { title: "AI Assistant", placeholder: "Ask anything about Zaied...", close: "Close", initialMessage: "Hello! I'm your AI assistant. How can I help you today regarding Zaied's portfolio?", connectionError: "Sorry, I'm having trouble connecting right now." },
+    admin: { 
+        edit: "Edit", 
+        save: "Save", 
+        addItem: "Add Item", 
+        removeItem: "Remove", 
+        upload: "Upload New Image", 
+        change: "Change", 
+        deleteItem: "Delete Image", 
+        uploadError: "Failed to upload image.", 
+        deleteConfirm: "Are you sure you want to delete this image?", 
+        deleteError: "Failed to delete image.", 
+        avatarUploadError: "Failed to upload avatar image.", 
+        imageTooLargeError: "Image is too large. Please upload an image smaller than 500KB.",
+        imageReadError: "Failed to read image file.",
+        deleteEvaluation: "Delete Comment",
+        deleteEvaluationConfirm: "Are you sure you want to delete this comment?"
+    },
+    chatbot: { 
+        title: "AI Assistant", 
+        placeholder: "Ask anything about Zayed...", 
+        close: "Close", 
+        initialMessage: "Welcome! I am your AI assistant. How can I help you today regarding Zayed's portfolio?", 
+        connectionError: "Sorry, I'm having trouble connecting right now." 
+    },
 };
 
 export const translations: { [key: string]: Translation } = { ar, en };

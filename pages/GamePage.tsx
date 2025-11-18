@@ -1,7 +1,5 @@
-
-
 import React, { useState } from 'react';
-import { Translation } from '../../types';
+import { Translation } from '../types';
 import QuizGame from '../components/games/QuizGame';
 import MemoryGame from '../components/games/MemoryGame';
 import IconMatchGame from '../components/games/IconMatchGame';
@@ -87,8 +85,8 @@ const GamePage: React.FC<GamePageProps> = ({ t }) => {
                                     <Icon className="w-12 h-12 text-primary" />
                                </div>
                             </div>
-                            <h2 className="text-2xl font-bold text-center text-foreground mb-2 group-hover:text-primary transition-colors">{t.game[game.titleKey as keyof typeof t.game]}</h2>
-                            <p className="text-muted-foreground text-center">{t.game[game.descriptionKey as keyof typeof t.game]}</p>
+                            <h2 className="text-2xl font-bold text-center text-foreground mb-2 group-hover:text-primary transition-colors">{t.game[game.titleKey as keyof typeof t.game] as string}</h2>
+                            <p className="text-muted-foreground text-center">{t.game[game.descriptionKey as keyof typeof t.game] as string}</p>
                         </div>
                     );
                 })}

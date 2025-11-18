@@ -150,7 +150,7 @@ const App: React.FC = () => {
     }, [font, language]);
 
     const handleLogin = (password: string) => {
-        if (password === 'zaied99') { 
+        if (password === 'Zaied99') { 
             setIsAdmin(true);
             setShowLogin(false);
         } else {
