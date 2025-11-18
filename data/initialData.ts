@@ -411,7 +411,7 @@ const ar: Translation = {
 };
 
 const en: Translation = {
-    appName: "Zayed's Achievements",
+    appName: "Zaied's Achievements",
     nav: { home: "Home", journey: "Academic Journey", evaluation: "Zayed's Comments", game: "Game Arcade" },
     footer: { rights: "All rights reserved for" },
     login: { title: "Admin Login", password: "Password", enter: "Login", close: "Close" },
